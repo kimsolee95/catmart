@@ -1,13 +1,13 @@
-##Changes :white_check_mark:
+:white_check_mark: Changes
 
 -
 
 <br>
 
-##Related Details :heavy_plus_sign:
+:heavy_plus_sign: Related Details
 
 -
 
 <br>
 
-##To Reviewers :pray:
+:pray: To Reviewers
