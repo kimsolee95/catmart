@@ -18,6 +18,11 @@ body {
   text-align: center;
 }
 
+.header {
+  margin-bottom: 50px;
+
+}
+
 .content {
   margin-bottom: 100px;
   margin-top: 50px;
