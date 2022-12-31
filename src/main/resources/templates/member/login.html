@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+
+<!--추가 CSS -->
+<th:block layout:fragment="css">
+  <style>
+      html {
+        position: relative;
+        min-height: 100%;
+        margin: 0;
+      }
+
+      body {
+        min-height: 100%;
+      }
+
+      .footer {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        padding: 15px 0;
+        text-align: center;
+      }
+
+      .header {
+        margin-bottom: 50px;
+
+      }
+
+      .content {
+        margin-bottom: 100px;
+        margin-top: 150px;
+        margin-left: 450px;
+        margin-right: 450px;
+      }
+
+
+    </style>
+</th:block>
+
+
+  <div layout:fragment="content">
+
+    <form action="/member/login" method="post">
+      <div class="mb-3">
+        <label for="email" class="form-label">ID (EMAIL)</label>
+        <input type="email" class="form-control" id="email" name="email" required placeholder="EMAIL">
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">비밀번호</label>
+        <input type="password" class="form-control" id="password" name="password" required placeholder="PASSWORD">
+      </div>
+
+      <div class="mb-3">
+        <p th:if="${errorMessage}" th:text="${errorMessage}"></p>
+      </div>
+
+      <div class="mb-3">
+        <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+      </div>
+    </form>
+
+    <div class="mb-3">
+      <button class="btn btn-light btn-lg btn-block" onclick="location.href='/member/join'" type="button">회원가입</button>
+    </div>
+
+  </div>
+
+
+
+</html>

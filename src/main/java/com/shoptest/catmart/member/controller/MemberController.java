@@ -29,4 +29,20 @@ public class MemberController {
     return "index";
   }
 
+  @GetMapping(value= "/login")
+  public String memberLogin() {
+
+
+    return "member/login";
+  }
+
+  @GetMapping(value = "/login/fail")
+  public String memberLoginFail(Model model) {
+
+    String msg = "아이디 혹은 비밀번호를 확인해주세요.";
+    model.addAttribute("errorMessage", msg);
+
+    return "member/login";
+  }
+
 }
