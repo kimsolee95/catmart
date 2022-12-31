@@ -1,31 +1,22 @@
-package com.shoptest.catmart.admin.domain;
+package com.shoptest.catmart.admin.dto;
 
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
 /**
- * 카테고리 도메인
+ * 카테고리 dto
  * */
-@Entity
+
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class Category {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long categoryId;
+public class CategoryDto {
 
   /* 카테고리명 */
   private String categoryName;

@@ -11,6 +11,11 @@ spring:
       ddl-auto: update
     show-sql: true
 
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
 
 logging:
   level:
@@ -21,3 +26,7 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+uploadPath: file:///C:/catmart-upload/
+categoryImgLocation: C:/catmart-upload/category

@@ -1,31 +1,21 @@
-package com.shoptest.catmart.admin.domain;
+package com.shoptest.catmart.admin.dto;
 
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
 /**
- * 카테고리 이미지 도메인
+ * 카테고리 이미지 dto
  * */
-@Entity
+
 @Getter
 @Setter
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class CategoryImg {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long imgId;
+public class CategoryImgDto {
 
   /* 이미지명 */
   private String imgName;
