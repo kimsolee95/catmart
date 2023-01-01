@@ -1,10 +1,8 @@
 package com.shoptest.catmart.admin.controller;
 
-import com.shoptest.catmart.admin.domain.CategoryImg;
-import com.shoptest.catmart.admin.dto.CategoryDto;
-import com.shoptest.catmart.admin.dto.CategoryImgDto;
-import com.shoptest.catmart.admin.service.CategoryImgService;
 import com.shoptest.catmart.admin.service.CategoryService;
+import com.shoptest.catmart.product.dto.ProductItemDto;
+import com.shoptest.catmart.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,30 +14,34 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
-@RequestMapping("/admin/category")
+@RequestMapping("/admin/product")
 @RequiredArgsConstructor
-public class ManagingCategoryController {
+public class ManagingProductController {
 
+  private final ProductService productService;
   private final CategoryService categoryService;
 
   @GetMapping("/add.do")
   public String categoryAdd(Model model) {
 
-    return "admin/category/add";
+    model.addAttribute("categoryList", categoryService.categorySelectionList());
+
+    return "admin/product/add";
   }
 
   @PostMapping("/add.do")
-  public String categoryAddSubmit(CategoryDto categoryDto
+  public String categoryAddSubmit(ProductItemDto productItemDto
       , BindingResult bindingResult
       , Model model
       , @RequestParam("fileInput")
-      MultipartFile fileInput) {
+      MultipartFile fileInput
+  ) {
 
     if (bindingResult.hasErrors()) {
-      return "admin/category/add";
+      return "admin/product/add";
     }
 
-    categoryService.saveCategory(categoryDto, fileInput);
+    productService.saveProduct(productItemDto, fileInput);
 
     return "redirect:/";
   }

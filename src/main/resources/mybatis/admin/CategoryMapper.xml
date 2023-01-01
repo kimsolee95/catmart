@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shoptest.catmart.admin.mapper.CategoryMapper">
+
+  <select id="categorySelectionList" resultType="com.shoptest.catmart.admin.dto.CategorySelectionDto">
+    SELECT
+      A.CATEGORY_ID
+      , A.CATEGORY_NAME
+    FROM CATEGORY A
+    INNER JOIN CATEGORY_IMG B
+    ON A.CATEGORY_ID = B.CATEGORY_ID
+  </select>
+
+</mapper>

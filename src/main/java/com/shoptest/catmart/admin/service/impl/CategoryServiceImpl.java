@@ -2,10 +2,13 @@ package com.shoptest.catmart.admin.service.impl;
 
 import com.shoptest.catmart.admin.domain.Category;
 import com.shoptest.catmart.admin.dto.CategoryDto;
+import com.shoptest.catmart.admin.dto.CategorySelectionDto;
+import com.shoptest.catmart.admin.mapper.CategoryMapper;
 import com.shoptest.catmart.admin.repository.CategoryRepository;
 import com.shoptest.catmart.admin.service.CategoryImgService;
 import com.shoptest.catmart.admin.service.CategoryService;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +20,7 @@ public class CategoryServiceImpl implements CategoryService {
 
   private final CategoryRepository categoryRepository;
   private final CategoryImgService categoryImgService;
+  private final CategoryMapper categoryMapper;
 
   @Override
   @Transactional
@@ -35,5 +39,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     return true;
+  }
+
+  @Override
+  public List<CategorySelectionDto> categorySelectionList() {
+
+    return categoryMapper.categorySelectionList();
   }
 }

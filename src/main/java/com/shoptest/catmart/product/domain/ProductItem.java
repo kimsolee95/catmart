@@ -8,7 +8,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -19,12 +22,18 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ProductItem {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long productItemId;
-  
+
+  /* 상품 카테고리 ID */
+  private Long categoryId;
+
   /* 상품이름 */
   private String itemName;
   

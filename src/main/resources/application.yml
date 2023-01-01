@@ -30,3 +30,4 @@ mybatis:
 
 uploadPath: file:///C:/catmart-upload/
 categoryImgLocation: C:/catmart-upload/category
+productImgLocation: C:/catmart-upload/product
