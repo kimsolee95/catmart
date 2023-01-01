@@ -57,7 +57,7 @@ public class CategoryImgServiceImpl implements CategoryImgService {
     //DB insert
     CategoryImg saveCategoryImg = CategoryImg.builder()
         .imgName(imgName)
-        .originImgPath(originFileName)
+        .originImgPath(originFilePath)
         .urlImgPath(imgUrl)
         .categoryId(saveCategory.getCategoryId())
         .createdAt(LocalDateTime.now())
