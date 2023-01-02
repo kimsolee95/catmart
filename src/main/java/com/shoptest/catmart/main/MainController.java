@@ -15,6 +15,7 @@ public class MainController {
   @RequestMapping("/main")
   public String index(Model model) {
 
+    //pr test
     model.addAttribute("frontCategoryList", categoryService.selectFrontCategoryList());
 
     return "index";
