@@ -3,6 +3,7 @@ package com.shoptest.catmart.admin.service.impl;
 import com.shoptest.catmart.admin.domain.Category;
 import com.shoptest.catmart.admin.dto.CategoryDto;
 import com.shoptest.catmart.admin.dto.CategorySelectionDto;
+import com.shoptest.catmart.admin.dto.FrontCategoryDto;
 import com.shoptest.catmart.admin.mapper.CategoryMapper;
 import com.shoptest.catmart.admin.repository.CategoryRepository;
 import com.shoptest.catmart.admin.service.CategoryImgService;
@@ -45,5 +46,10 @@ public class CategoryServiceImpl implements CategoryService {
   public List<CategorySelectionDto> categorySelectionList() {
 
     return categoryMapper.categorySelectionList();
+  }
+
+  @Override
+  public List<FrontCategoryDto> selectFrontCategoryList() {
+    return categoryMapper.frontCategoryList();
   }
 }

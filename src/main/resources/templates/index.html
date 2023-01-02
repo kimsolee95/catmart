@@ -37,7 +37,7 @@
       }
 
       .header {
-        margin-bottom: 50px;
+        margin-bottom: 20px;
 
       }
 
@@ -95,51 +95,22 @@
 
   <div class="content">
 
-
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">카테고리별로 보기</li>
+      </ol>
+    </nav>
 
     <!-- 카테고리 출력 -->
-    <ul class="list-group list-group-horizontal">
-      <li class="list-group-item">
-        <div class="card" style="width: 15rem;">
-          <img src="..." class="card-img-top" alt="...">
+    <ul class="list-group list-group-horizontal d-flex justify-content-center">
+      <li class="list-group-item" th:each="category : ${frontCategoryList}">
+        <div class="card" style="width: 13rem;">
+          <img th:src="${category.urlImgPath}" class="card-img-top" alt="...">
           <div class="card-body">
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <p th:text="${category.categoryName}" class="card-text"></p>
           </div>
         </div>
       </li>
-      <li class="list-group-item">
-        <div class="card" style="width: 15rem;">
-          <img src="..." class="card-img-top" alt="...">
-          <div class="card-body">
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          </div>
-        </div>
-      </li>
-      <li class="list-group-item">
-        <div class="card" style="width: 15rem;">
-          <img src="..." class="card-img-top" alt="...">
-          <div class="card-body">
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          </div>
-        </div>
-      </li>
-      <li class="list-group-item">
-        <div class="card" style="width: 15rem;">
-          <img src="..." class="card-img-top" alt="...">
-          <div class="card-body">
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          </div>
-        </div>
-      </li>
-      <li class="list-group-item">
-        <div class="card" style="width: 15rem;">
-          <img src="..." class="card-img-top" alt="...">
-          <div class="card-body">
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          </div>
-        </div>
-      </li>
-
     </ul>
 
   </div>

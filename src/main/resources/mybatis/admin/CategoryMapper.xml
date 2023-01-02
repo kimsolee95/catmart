@@ -13,4 +13,14 @@
     ON A.CATEGORY_ID = B.CATEGORY_ID
   </select>
 
+  <select id="frontCategoryList" resultType="com.shoptest.catmart.admin.dto.FrontCategoryDto">
+    SELECT
+      A.CATEGORY_ID
+      , A.CATEGORY_NAME
+      , B.URL_IMG_PATH
+    FROM CATEGORY A
+    INNER JOIN CATEGORY_IMG B
+    ON A.CATEGORY_ID = B.CATEGORY_ID
+  </select>
+
 </mapper>
