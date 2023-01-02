@@ -4,5 +4,38 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shoptest.catmart.product.mapper.ProductMapper">
 
+  <select id="adminProductMngList" resultType="com.shoptest.catmart.product.dto.AdminProductMngDto">
+    SELECT
+      A.PRODUCT_ITEM_ID
+      , A.ITEM_NAME
+      , A.ITEM_STATUS
+      , A.PRICE
+      , (SELECT C.CATEGORY_NAME FROM CATEGORY C WHERE C.CATEGORY_ID = A.CATEGORY_ID) AS CATEGORY_NAME
+      , (SELECT C.CATEGORY_ID FROM CATEGORY C WHERE C.CATEGORY_ID = A.CATEGORY_ID) AS CATEGORY_ID
+      , A.POST_YN
+    FROM PRODUCT_ITEM A
+    INNER JOIN ITEM_IMG B
+    ON A.PRODUCT_ITEM_ID = B.PRODUCT_ITEM_ID
+  </select>
+
+
+  <select id="adminProductMngDetail" resultType="com.shoptest.catmart.product.dto.AdminProductMngDetailDto">
+    SELECT
+      A.PRODUCT_ITEM_ID
+      , A.ITEM_NAME
+      , A.ITEM_STATUS
+      , A.ITEM_SUBJECT
+      , A.PRICE
+      , A.POST_YN
+      , A.STOCK
+      , A.CATEGORY_ID
+      , (SELECT C.CATEGORY_NAME FROM CATEGORY C WHERE A.CATEGORY_ID = C.CATEGORY_ID) AS CATEGORY_NAME
+      , B.IMG_ID
+      , B.URL_IMG_PATH /* 출력용 이미지 주소 url */
+    FROM PRODUCT_ITEM A
+    INNER JOIN ITEM_IMG B
+    ON A.PRODUCT_ITEM_ID = B.PRODUCT_ITEM_ID
+    WHERE A.PRODUCT_ITEM_ID = #{productItemId}
+  </select>
 
 </mapper>

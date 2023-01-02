@@ -32,5 +32,8 @@ public class ProductItemDto {
   /* 상품재고 */
   private int stock;
 
+  /* 상품 게시 여부 */
+  private boolean postYn;
+
 
 }

@@ -49,6 +49,9 @@ public class ProductItem {
   
   /* 상품재고 */
   private int stock;
+
+  /* 상품 게시 여부 */
+  private boolean postYn;
   
   /* 등록일자 */
   private LocalDateTime createdAt;
