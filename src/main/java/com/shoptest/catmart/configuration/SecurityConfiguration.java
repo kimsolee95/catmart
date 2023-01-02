@@ -45,6 +45,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         , "/member/join"
     ).permitAll();
 
+    http.authorizeRequests().antMatchers("/admin/**")
+            .hasAuthority("ROLE_ADMIN_SELLER");
+
     http.formLogin()
         .loginPage("/member/login")
         .defaultSuccessUrl("/main")
