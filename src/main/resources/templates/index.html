@@ -102,18 +102,42 @@
     </nav>
 
     <!-- 카테고리 출력 -->
-    <ul class="list-group list-group-horizontal d-flex justify-content-center">
-      <li class="list-group-item" th:each="category : ${frontCategoryList}">
-        <div class="card" style="width: 13rem;">
+    <!--
+    <ul class="list-group list-group-horizontal">
+      <div th:each="category, i : ${frontCategoryList}" class="d-flex justify-content-center">
+        <li class="list-group-item">
+          <div class="card" style="width: 13rem;">
+            <img th:src="${category.urlImgPath}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <a th:href="'/product/list?categoryId=' + ${category.categoryId}"
+                 th:text="${category.categoryName}"
+                 class="card-text badge badge-pill badge-light"></a>
+            </div>
+          </div>
+        </li>
+        <hr th:if="${i.index % 3 == 0}" style="visibility: hidden; height: 40px;" />
+      </div>
+    </ul>
+    -->
+
+    <div class="card-deck d-flex justify-content-center">
+      <div th:each="category, i : ${frontCategoryList}">
+
+        <div class="card border-0" style="width: 175px;">
           <img th:src="${category.urlImgPath}" class="card-img-top" alt="...">
           <div class="card-body">
-            <a th:href="'/product/list?categoryId=' + ${category.categoryId}"
-               th:text="${category.categoryName}"
-               class="card-text badge badge-pill badge-light"></a>
+            <h5 class="card-title">
+              <a th:href="'/product/list?categoryId=' + ${category.categoryId}"
+                 th:text="${category.categoryName}"></a>
+            </h5>
           </div>
         </div>
-      </li>
-    </ul>
+
+        <hr th:if="${i.index % 5 == 0}" style="visibility: hidden; height: 40px;" />
+
+      </div>
+    </div>
+
 
   </div>
 
