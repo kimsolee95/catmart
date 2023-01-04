@@ -79,50 +79,53 @@
   <div class="content">
     <h2>상품 상세관리</h2>
 
-    <div id="productCard" class="card mb-3" style="max-width: 1100px;">
-      <div class="row no-gutters">
+    <div class="d-flex justify-content-center">
+      <div id="productCard" class="card mb-3" style="max-width: 1100px;">
+        <div class="row no-gutters">
 
-        <div class="col-md-7">
-          <img th:src="${detail.urlImgPath}" class="card-img" alt="...">
-        </div>
-
-        <div class="col-md-5">
-
-          <div class="card-body">
-
-            <h2 class="card-title" th:text="${detail.itemName}">
-            </h2>
-            <hr/>
-            <p class="card-text">
-              <h3><span class="badge badge-dark">상세설명</span></h3>
-              <h4><p th:text="${detail.itemSubject}"></p></h4>
-            </p>
-            <p class="card-text">
-              <h3><span class="badge badge-dark">판매가격</span></h3>
-              <h4><p th:text="${detail.price}"></p></h4>
-            </p>
-            <p class="card-text">
-              <h3><span class="badge badge-dark">게시 여부</span></h3>
-              <h4><p th:text="${detail.postYn}"></p></h4>
-            </p>
-            <p class="card-text">
-              <h3><span class="badge badge-dark">상품 재고</span></h3>
-              <h4><p th:text="${detail.stock}"></p></h4>
-            </p>
-            <p class="card-text">
-              <h3><span class="badge badge-dark">상품 카테고리</span></h3>
-              <h4><p th:text="${detail.categoryName}"></p></h4>
-            </p>
-
-            <p class="card-text">
-              <small class="text-muted">Last updated 3 mins ago</small>
-            </p>
+          <div class="col-md-5">
+            <img th:src="${detail.urlImgPath}" class="card-img" alt="...">
           </div>
+
+          <div class="col-md-7">
+
+            <div class="card-body">
+
+              <h2 class="card-title" th:text="${detail.itemName}">
+              </h2>
+              <hr/>
+              <p class="card-text">
+                <h3><span class="badge badge-dark">상세설명</span></h3>
+                <h4><p th:text="${detail.itemSubject}"></p></h4>
+              </p>
+              <p class="card-text">
+                <h3><span class="badge badge-dark">판매가격</span></h3>
+                <h4><p th:text="${detail.price}"></p></h4>
+              </p>
+              <p class="card-text">
+                <h3><span class="badge badge-dark">게시 여부</span></h3>
+                <h4><p th:text="${detail.postYn}"></p></h4>
+              </p>
+              <p class="card-text">
+                <h3><span class="badge badge-dark">상품 재고</span></h3>
+                <h4><p th:text="${detail.stock}"></p></h4>
+              </p>
+              <p class="card-text">
+                <h3><span class="badge badge-dark">상품 카테고리</span></h3>
+                <h4><p th:text="${detail.categoryName}"></p></h4>
+              </p>
+
+              <p class="card-text">
+                <small class="text-muted">Last updated 3 mins ago</small>
+              </p>
+            </div>
+          </div>
+
         </div>
 
       </div>
-
     </div>
+
 
 
   </div>

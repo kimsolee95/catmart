@@ -59,21 +59,59 @@
 
   <div class="content">
 
-    <div class="card mb-3" style="max-width: 540px;">
-      <div class="row no-gutters">
-        <div class="col-md-4">
-          <img src="..." class="card-img" alt="...">
-        </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+    <!-- category info bar -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">
+          카테고리 > <a th:href="'/product/list?categoryId=' + ${detail.categoryId}" th:text="${detail.categoryName}"></a> > <span th:text="${detail.itemName}"></span>
+        </li>
+      </ol>
+    </nav>
+
+    <!-- product detail area -->
+    <div class="d-flex justify-content-center">
+      <div class="card mb-3" style="max-width: 1200px;">
+        <div class="row no-gutters">
+          <div class="col-md-6">
+            <img th:src="${detail.urlImgPath}" class="card-img" alt="...">
+          </div>
+          <div class="col-md-6">
+            <div class="card-body">
+              <h2 th:text="${detail.itemName}" class="card-title"></h2>
+              <hr style="visibility: hidden; margin-bottom: 13px;"/>
+              <p class="card-text">
+                <div class="d-flex flex-row-reverse bd-highlight">
+                  <h3><span th:text="${detail.price}" class="badge badge-warning"></span>원</h3>
+                </div>
+              </p>
+              <hr/>
+              <p class="card-text" style="height: 110px;">
+                <span th:text="${detail.itemSubject}"></span>
+              </p>
+              <hr/>
+              <p class="card-text">
+                <div class="container">
+                  <p>
+                    <span>수량</span><span><input type="number" style="width:80px; margin-left: 13px;" /></span>
+                  </p>
+                  <p>
+                    <span>결제 금액</span>
+                    <h2><span>10,000원</span></h2>
+                  </p>
+                </div>
+              </p>
+              <hr/>
+              <p class="card-text">
+                <button class="btn btn-light btn-lg btn-block" type="submit">장바구니 담기</button>
+              </p>
+              <p class="card-text">
+                <button class="btn btn-primary btn-lg btn-block" type="submit">바로 주문하기</button>
+              </p>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
 
 
 

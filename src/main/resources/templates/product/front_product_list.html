@@ -75,7 +75,7 @@
     <!-- search category bar -->
     <div class="row justify-content-md-center" style="margin-bottom: 40px;">
       <div th:each="category : ${categoryList}" class="col-md-auto">
-        <h5>
+        <h5> #
           <a th:href="'list?categoryId=' + ${category.categoryId}" th:text="${category.categoryName}"
              class="badge badge-pill badge-light"></a>
         </h5>
