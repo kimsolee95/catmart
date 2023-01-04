@@ -6,16 +6,19 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * FRONT 조회용 상품 목록 dto
+ * FRONT 조회용 상품 상세 dto
  * */
 
 @Getter
 @Setter
 @ToString
-public class FrontProductDto {
+public class FrontProductDetailDto {
 
   /* 상품 카테고리 ID */
   private Long categoryId;
+
+  /* 상품 카테고리명 */
+  private String categoryName;
 
   /* 상품 ID */
   private Long productItemId;

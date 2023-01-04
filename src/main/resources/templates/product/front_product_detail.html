@@ -48,11 +48,6 @@
         margin-right: 200px;
       }
 
-      .front-banner {
-        margin-left: 100px;
-        margin-right: 100px;
-        margin-bottom: 60px;
-      }
 
     </style>
   </th:block>
@@ -64,45 +59,20 @@
 
   <div class="content">
 
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item active" aria-current="page">
-          카테고리 > <span th:if="${selectCategory}" th:text="${selectCategory.categoryName}"></span><span th:if="${selectCategory == null}">전체</span>
-        </li>
-      </ol>
-    </nav>
-
-    <!-- search category bar -->
-    <div class="row justify-content-md-center" style="margin-bottom: 40px;">
-      <div th:each="category : ${categoryList}" class="col-md-auto">
-        <h5>
-          <a th:href="'list?categoryId=' + ${category.categoryId}" th:text="${category.categoryName}"
-             class="badge badge-pill badge-light"></a>
-        </h5>
-      </div>
-    </div>
-
-    <!-- product list -->
-    <div class="card-deck d-flex justify-content-center">
-      <div th:each="product, i : ${frontProductList}">
-
-        <div class="card" style="width: 300px;">
-          <img th:src="${product.urlImgPath}" class="card-img-top" alt="...">
+    <div class="card mb-3" style="max-width: 540px;">
+      <div class="row no-gutters">
+        <div class="col-md-4">
+          <img src="..." class="card-img" alt="...">
+        </div>
+        <div class="col-md-8">
           <div class="card-body">
-            <h5 class="card-title">
-              <a th:href="'detail/' + ${product.productItemId}"
-                 th:text="${product.itemName}"></a>
-            </h5>
-            <p class="card-text" th:text="${product.price}"></p>
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
             <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
           </div>
         </div>
-
-        <hr th:if="${i.index % 3 == 0}" style="visibility: hidden; height: 40px;" />
-
       </div>
     </div>
-
 
 
 

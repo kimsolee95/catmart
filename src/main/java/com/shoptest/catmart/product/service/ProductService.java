@@ -2,6 +2,7 @@ package com.shoptest.catmart.product.service;
 
 import com.shoptest.catmart.product.dto.AdminProductMngDetailDto;
 import com.shoptest.catmart.product.dto.AdminProductMngDto;
+import com.shoptest.catmart.product.dto.FrontProductDetailDto;
 import com.shoptest.catmart.product.dto.FrontProductDto;
 import com.shoptest.catmart.product.dto.ProductItemDto;
 import java.util.List;
@@ -20,5 +21,8 @@ public interface ProductService {
 
   /* front - 상품목록 조회 */
   List<FrontProductDto> selectFrontProductList(FrontProductDto parameter);
+
+  /* front - 상품상세 조회 */
+  FrontProductDetailDto selectFrontProductDetail(Long productItemId);
 
 }

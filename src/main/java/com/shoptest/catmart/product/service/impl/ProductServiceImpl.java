@@ -3,6 +3,7 @@ package com.shoptest.catmart.product.service.impl;
 import com.shoptest.catmart.product.domain.ProductItem;
 import com.shoptest.catmart.product.dto.AdminProductMngDetailDto;
 import com.shoptest.catmart.product.dto.AdminProductMngDto;
+import com.shoptest.catmart.product.dto.FrontProductDetailDto;
 import com.shoptest.catmart.product.dto.FrontProductDto;
 import com.shoptest.catmart.product.dto.ProductItemDto;
 import com.shoptest.catmart.product.mapper.ProductMapper;
@@ -61,5 +62,10 @@ public class ProductServiceImpl implements ProductService {
   @Override
   public List<FrontProductDto> selectFrontProductList(FrontProductDto parameter) {
     return productMapper.frontProductList(parameter);
+  }
+
+  @Override
+  public FrontProductDetailDto selectFrontProductDetail(Long productItemId) {
+    return productMapper.frontProductDetail(productItemId);
   }
 }

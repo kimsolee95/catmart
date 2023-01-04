@@ -2,12 +2,14 @@ package com.shoptest.catmart.product.controller;
 
 import com.shoptest.catmart.admin.dto.FrontCategoryDto;
 import com.shoptest.catmart.admin.service.CategoryService;
+import com.shoptest.catmart.product.dto.FrontProductDetailDto;
 import com.shoptest.catmart.product.dto.FrontProductDto;
 import com.shoptest.catmart.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -31,6 +33,18 @@ public class FrontProductController {
     model.addAttribute("categoryList", categoryService.categorySelectionList());
 
     return "/product/front_product_list";
+  }
+
+  @GetMapping("/detail/{productItemId}")
+  public String frontProductDetail(Model model, @PathVariable("productItemId") Long productItemId) {
+
+    FrontProductDetailDto detail = new FrontProductDetailDto();
+    if (productItemId != null) {
+      detail = productService.selectFrontProductDetail(productItemId);
+    }
+
+    model.addAttribute("detail", detail);
+    return "/product/front_product_detail";
   }
 
 
