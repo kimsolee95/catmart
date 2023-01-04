@@ -66,10 +66,23 @@
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item active" aria-current="page">카테고리 > 음식</li>
+        <li class="breadcrumb-item active" aria-current="page">
+          카테고리 > <span th:if="${selectCategory}" th:text="${selectCategory.categoryName}"></span><span th:if="${selectCategory == null}">전체</span>
+        </li>
       </ol>
     </nav>
 
+    <!-- search bar -->
+    <div class="row justify-content-md-center" style="margin-bottom: 40px;">
+      <div th:each="category : ${categoryList}" class="col-md-auto">
+        <h5>
+          <a th:href="'list?categoryId=' + ${category.categoryId}" th:text="${category.categoryName}"
+             class="badge badge-pill badge-light"></a>
+        </h5>
+      </div>
+    </div>
+
+    <!-- product list -->
     <div class="card-deck d-flex justify-content-center">
       <div th:each="product, i : ${frontProductList}">
 

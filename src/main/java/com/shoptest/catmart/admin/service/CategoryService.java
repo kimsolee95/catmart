@@ -17,4 +17,8 @@ public interface CategoryService {
   /* front main page 카테고리 select */
   List<FrontCategoryDto> selectFrontCategoryList();
 
+  /* 카테고리 정보 detail select */
+  FrontCategoryDto selectFrontCategoryDetail(long categoryId);
+
+
 }
