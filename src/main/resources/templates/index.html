@@ -107,7 +107,9 @@
         <div class="card" style="width: 13rem;">
           <img th:src="${category.urlImgPath}" class="card-img-top" alt="...">
           <div class="card-body">
-            <p th:text="${category.categoryName}" class="card-text"></p>
+            <a th:href="'/product/list?categoryId=' + ${category.categoryId}"
+               th:text="${category.categoryName}"
+               class="card-text badge badge-pill badge-light"></a>
           </div>
         </div>
       </li>
