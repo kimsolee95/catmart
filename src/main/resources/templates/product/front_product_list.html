@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <th:block layout:fragment="script"></th:block>
+  <th:block layout:fragment="css">
+    <style>
+
+      html {
+        position: relative;
+        min-height: 100%;
+        margin: 0;
+      }
+
+      body {
+        min-height: 100%;
+      }
+
+      .footer {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        padding: 15px 0;
+        text-align: center;
+      }
+
+      .header {
+        margin-bottom: 20px;
+
+      }
+
+      .content {
+        margin-bottom: 100px;
+        margin-top: 50px;
+        margin-left: 200px;
+        margin-right: 200px;
+      }
+
+      .front-banner {
+        margin-left: 100px;
+        margin-right: 100px;
+        margin-bottom: 60px;
+      }
+
+    </style>
+  </th:block>
+
+</head>
+<body>
+
+  <div th:replace="fragments/header::header"></div>
+
+  <div class="content">
+
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">
+          카테고리 > <span th:if="${selectCategory}" th:text="${selectCategory.categoryName}"></span><span th:if="${selectCategory == null}">전체</span>
+        </li>
+      </ol>
+    </nav>
+
+    <!-- search category bar -->
+    <div class="row justify-content-md-center" style="margin-bottom: 40px;">
+      <div th:each="category : ${categoryList}" class="col-md-auto">
+        <h5> #
+          <a th:href="'list?categoryId=' + ${category.categoryId}" th:text="${category.categoryName}"
+             class="badge badge-pill badge-light"></a>
+        </h5>
+      </div>
+    </div>
+
+    <!-- product list -->
+    <div class="card-deck d-flex justify-content-center">
+      <div th:each="product, i : ${frontProductList}">
+
+        <div class="card rounded" style="width: 300px;">
+          <img th:src="${product.urlImgPath}" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">
+              <a th:href="'detail/' + ${product.productItemId}"
+                 th:text="${product.itemName}"></a>
+            </h5>
+            <p class="card-text" th:text="${product.price}"></p>
+            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+          </div>
+        </div>
+
+        <hr th:if="${i.index % 3 == 0}" style="visibility: hidden; height: 40px;" />
+
+      </div>
+    </div>
+
+
+
+
+
+
+  </div>
+
+  <div th:replace="fragments/footer::footer"></div>
+
+</body>
+</html>

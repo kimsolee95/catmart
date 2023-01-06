@@ -18,7 +18,6 @@
     ON A.PRODUCT_ITEM_ID = B.PRODUCT_ITEM_ID
   </select>
 
-
   <select id="adminProductMngDetail" resultType="com.shoptest.catmart.product.dto.AdminProductMngDetailDto">
     SELECT
       A.PRODUCT_ITEM_ID
@@ -36,6 +35,41 @@
     INNER JOIN ITEM_IMG B
     ON A.PRODUCT_ITEM_ID = B.PRODUCT_ITEM_ID
     WHERE A.PRODUCT_ITEM_ID = #{productItemId}
+  </select>
+
+  <select id="frontProductList"
+    parameterType="com.shoptest.catmart.product.dto.FrontProductDto"
+    resultType="com.shoptest.catmart.product.dto.FrontProductDto">
+    SELECT
+      A.PRODUCT_ITEM_ID
+      , A.ITEM_NAME
+      , A.PRICE
+      , A.ITEM_STATUS
+      , B.URL_IMG_PATH
+    FROM PRODUCT_ITEM A
+    INNER join ITEM_IMG B
+    on A.PRODUCT_ITEM_ID = B.PRODUCT_ITEM_ID
+    WHERE A.POST_YN = 1
+    <if test="categoryId != null and !''.equals(categoryId)">
+      AND A.CATEGORY_ID = #{categoryId}
+    </if>
+  </select>
+
+  <select id="frontProductDetail" resultType="com.shoptest.catmart.product.dto.FrontProductDetailDto">
+    SELECT
+      A.PRODUCT_ITEM_ID
+      , A.ITEM_NAME
+      , A.ITEM_STATUS
+      , A.ITEM_SUBJECT
+      , A.PRICE
+      , B.URL_IMG_PATH
+      , (SELECT C.CATEGORY_NAME FROM CATEGORY C WHERE C.CATEGORY_ID = A.CATEGORY_ID) AS CATEGORY_NAME
+      , A.CATEGORY_ID
+    FROM PRODUCT_ITEM A
+    INNER JOIN ITEM_IMG B
+    ON A.PRODUCT_ITEM_ID = B.PRODUCT_ITEM_ID
+    WHERE A.POST_YN = 1
+    AND A.PRODUCT_ITEM_ID = #{productItemId}
   </select>
 
 </mapper>

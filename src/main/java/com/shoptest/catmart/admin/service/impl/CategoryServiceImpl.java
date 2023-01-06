@@ -10,6 +10,7 @@ import com.shoptest.catmart.admin.service.CategoryImgService;
 import com.shoptest.catmart.admin.service.CategoryService;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,5 +52,22 @@ public class CategoryServiceImpl implements CategoryService {
   @Override
   public List<FrontCategoryDto> selectFrontCategoryList() {
     return categoryMapper.frontCategoryList();
+  }
+
+  @Override
+  public FrontCategoryDto selectFrontCategoryDetail(long categoryId) {
+
+    Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+    if (optionalCategory.isPresent()) {
+
+      Category category = optionalCategory.get();
+
+      FrontCategoryDto detailDto = new FrontCategoryDto();
+      detailDto.setCategoryId(category.getCategoryId());
+      detailDto.setCategoryName(category.getCategoryName());
+      return detailDto;
+    }
+
+    return null;
   }
 }
