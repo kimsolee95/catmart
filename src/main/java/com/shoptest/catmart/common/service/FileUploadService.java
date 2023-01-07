@@ -1,4 +1,4 @@
-package com.shoptest.catmart.common;
+package com.shoptest.catmart.common.service;
 
 import java.io.File;
 import java.io.FileOutputStream;
