@@ -20,8 +20,8 @@
 
       window.addEventListener('DOMContentLoaded', function(){
 
-        const productItemId = document.getElementById('productItemId').value;
-        const quantityInput = document.getElementById('quantity');
+        const productItemId = document.getElementById('productItemId').value; //상품 ID
+        const quantityInput = document.getElementById('quantity'); //상품 수량
         quantityInput.oninput = calculatePayment;
 
         const cartAddBtn = document.getElementById('cartAddBtn');
@@ -40,7 +40,7 @@
         cartAddBtn.addEventListener('click', function() {
 
           let url = '/api/cart/add-req';
-          let quantity = document.getElementById('quantity').value;
+          let quantity = quantityInput.value;
 
           let parameter = {
             productItemId: productItemId

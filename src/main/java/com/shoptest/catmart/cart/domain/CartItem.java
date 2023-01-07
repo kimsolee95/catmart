@@ -49,4 +49,9 @@ public class CartItem {
 
   /* 수정일자 */
   private LocalDateTime modifiedAt;
+
+  public void addQuantity(int quantity) {
+    this.quantity += quantity;
+  }
+
 }
