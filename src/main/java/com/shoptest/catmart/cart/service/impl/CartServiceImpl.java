@@ -60,7 +60,7 @@ public class CartServiceImpl implements CartService {
 
     //3. cartItem data check (by FK (cartId, productItemId))
     Optional<ProductItem> optionalProductItem = productItemRepository.findById(parameter.getProductItemId());
-    ProductItem wishProductItem = optionalProductItem.get();
+    ProductItem wishProductItem = optionalProductItem.get(); //특정 상품상세 page 내에서 쓰이는 api이기 때문에 상품 ID에 대한 상품 value는 항상 있다고 가정?.. 보단 exception 추가 필요.
 
     Optional<CartItem> optionalCartItem = cartItemRepository.findByCartCartIdAndProductItemProductItemId(
         cartOfMember.getCartId(), parameter.getProductItemId());
