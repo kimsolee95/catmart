@@ -17,6 +17,7 @@ public class ApiCartController {
 
   private final CartService cartService;
 
+  //장바구니 상품 담기
   @PostMapping("/api/cart/add-req")
   public ResponseEntity<?> cartAddReq(
       Model model
