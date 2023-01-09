@@ -12,7 +12,76 @@
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-  <th:block layout:fragment="script"></th:block>
+  <!-- axios cdn -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+      window.addEventListener('DOMContentLoaded', function(){
+
+        const productItemId = document.getElementById('productItemId').value; //상품 ID
+        const quantityInput = document.getElementById('quantity'); //상품 수량
+        quantityInput.oninput = calculatePayment;
+
+        const cartAddBtn = document.getElementById('cartAddBtn');
+
+        //수량에 따른 결제 금액 계산
+        function calculatePayment() {
+
+          let price = document.getElementById('price').value;
+          let quantity = document.getElementById('quantity').value;
+          let payment = price * quantity;
+
+          document.getElementById('payment').innerText = payment + '원';
+        }
+
+        //장바구니 상품 추가
+        cartAddBtn.addEventListener('click', function() {
+
+          const cartAddMsg = '장바구니에 해당 상품을 담겠습니까?';
+
+          if (!confirm(cartAddMsg)) {
+            return false;
+          }
+
+          let url = '/api/cart/add-req';
+          let quantity = quantityInput.value;
+
+          let parameter = {
+            productItemId: productItemId
+            , quantity: quantity
+          };
+
+          axios.post(url, parameter).then(function(response) {
+
+            response.data = response.data || {};
+            response.data.responseResultHeader = response.data.responseResultHeader || {};
+
+            //fail
+            if (!response.data.responseResultHeader.result) {
+              alert('내부 서버 오류로 인해 장바구니에 상품을 담을 수 없습니다.');
+              return false;
+            }
+
+            //success
+            alert('장바구니에 해당 상품을 담았습니다.');
+
+          }).catch(function(error) {
+
+            console.log(error);
+          });
+
+
+        });
+
+
+
+      }); //window.addEventListener
+
+    </script>
+  </th:block>
+
   <th:block layout:fragment="css">
     <style>
 
@@ -81,6 +150,8 @@
               <hr style="visibility: hidden; margin-bottom: 13px;"/>
               <p class="card-text">
                 <div class="d-flex flex-row-reverse bd-highlight">
+                  <input th:value="${detail.productItemId}" type="hidden" id="productItemId" name="price" />
+                  <input th:value="${detail.price}" type="hidden" id="price" name="price" />
                   <h3><span th:text="${detail.price}" class="badge badge-warning"></span>원</h3>
                 </div>
               </p>
@@ -92,20 +163,20 @@
               <p class="card-text">
                 <div class="container">
                   <p>
-                    <span>수량</span><span><input type="number" style="width:80px; margin-left: 13px;" /></span>
+                    <span>수량</span><span><input type="number" defaultValue="1" min="1" id="quantity" style="width:80px; margin-left: 13px;" /></span>
                   </p>
                   <p>
                     <span>결제 금액</span>
-                    <h2><span>10,000원</span></h2>
+                    <h2><span th:text="${detail.price}" id="payment">원</span></h2>
                   </p>
                 </div>
               </p>
               <hr/>
               <p class="card-text">
-                <button class="btn btn-light btn-lg btn-block" type="submit">장바구니 담기</button>
+                <button class="btn btn-light btn-lg btn-block" id="cartAddBtn" type="submit">장바구니 담기</button>
               </p>
               <p class="card-text">
-                <button class="btn btn-primary btn-lg btn-block" type="submit">바로 주문하기</button>
+                <button class="btn btn-primary btn-lg btn-block" id="orderNowBtn" type="submit">바로 주문하기</button>
               </p>
             </div>
           </div>

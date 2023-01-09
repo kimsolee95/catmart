@@ -1,8 +1,6 @@
 package com.shoptest.catmart.product.service.impl;
 
-import com.shoptest.catmart.admin.domain.Category;
-import com.shoptest.catmart.admin.repository.CategoryImgRepository;
-import com.shoptest.catmart.common.FileUploadService;
+import com.shoptest.catmart.common.service.FileUploadService;
 import com.shoptest.catmart.product.domain.ItemImg;
 import com.shoptest.catmart.product.domain.ProductItem;
 import com.shoptest.catmart.product.repository.ItemImgRepository;

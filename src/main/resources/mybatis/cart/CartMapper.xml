@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shoptest.catmart.cart.mapper.CartMapper">
+
+  <select id="selectCartItemDetailList" resultType="com.shoptest.catmart.cart.dto.CartItemDetailDto">
+    SELECT
+      T1.CART_ITEM_ID
+      , T1.QUANTITY
+      , T1.CART_ID
+      , T2.PRODUCT_ITEM_ID
+      , T2.ITEM_NAME
+      , T2.ITEM_STATUS
+      , T2.ITEM_SUBJECT
+      , T2.PRICE
+      , T2.STOCK
+      , T2.URL_IMG_PATH
+      , T2.POST_YN
+    FROM (
+      SELECT
+        CART_ITEM_ID
+        , QUANTITY
+        , CART_ID
+        , PRODUCT_ITEM_ID
+      FROM CART_ITEM
+      WHERE CART_ID = (
+        SELECT
+          CART_ID
+        FROM CART
+        WHERE MEMBER_ID = #{memberId}
+        LIMIT 1
+      )
+    ) T1
+    INNER JOIN (
+      SELECT
+        A.PRODUCT_ITEM_ID
+        , A.ITEM_NAME
+        , A.PRICE
+        , A.ITEM_STATUS
+        , A.ITEM_SUBJECT
+        , A.STOCK
+        , A.POST_YN
+        , B.URL_IMG_PATH
+      FROM PRODUCT_ITEM A
+      INNER JOIN ITEM_IMG B
+      ON A.PRODUCT_ITEM_ID = B.PRODUCT_ITEM_ID
+    ) T2
+    ON T1.PRODUCT_ITEM_ID = T2.PRODUCT_ITEM_ID
+  </select>
+
+
+</mapper>
