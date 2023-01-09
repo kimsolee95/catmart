@@ -3,6 +3,8 @@ package com.shoptest.catmart.cart.service.impl;
 import com.shoptest.catmart.cart.domain.Cart;
 import com.shoptest.catmart.cart.domain.CartItem;
 import com.shoptest.catmart.cart.dto.CartItemAddInputDto;
+import com.shoptest.catmart.cart.dto.CartItemDetailDto;
+import com.shoptest.catmart.cart.mapper.CartMapper;
 import com.shoptest.catmart.cart.repository.CartItemRepository;
 import com.shoptest.catmart.cart.repository.CartRepository;
 import com.shoptest.catmart.cart.service.CartService;
@@ -11,6 +13,7 @@ import com.shoptest.catmart.member.repository.MemberRepository;
 import com.shoptest.catmart.product.domain.ProductItem;
 import com.shoptest.catmart.product.repository.ProductItemRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,9 +27,10 @@ public class CartServiceImpl implements CartService {
   private final CartItemRepository cartItemRepository;
   private final MemberRepository memberRepository;
   private final ProductItemRepository productItemRepository;
+  private final CartMapper cartMapper;
 
   /**
-   * @return 장바구니 상품 ID, Long CartItemId
+   * @return 장바구니 담기 완료 상품 ID, Long CartItemId
    *
    * */
   @Transactional
@@ -88,8 +92,19 @@ public class CartServiceImpl implements CartService {
 
   }
 
+  @Override
+  public List<CartItemDetailDto> selectCartItemDetailList(String email) {
 
+    //1. member data
+    Optional<Member> optionalMember = memberRepository.findByEmail(email);
+    if (!optionalMember.isPresent()) {
+      //exception 처리 필요 -> 로그인 정보(email) 로 찾은 member data가 없을 때의 예외 처리
+      return null;
+    }
+    Member member = optionalMember.get();
 
+    return cartMapper.selectCartItemDetailList(member.getMemberId());
+  }
 
 
 }

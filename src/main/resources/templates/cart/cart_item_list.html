@@ -82,7 +82,7 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item active" aria-current="page">
-          <span class="badge badge-primary">장바구니</span> > 주문결제 > 결제완료
+          <span class="badge badge-primary">장바구니</span>&nbsp;&nbsp;&nbsp;> 주문결제 > 결제완료
         </li>
       </ol>
     </nav>
@@ -99,18 +99,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr th:each="cartItem, i : ${cartItemList}">
             <td class="col-4">
               <!-- img -->
-              <div class="card mb-3" style="max-width: 300px;">
+              <div class="border-0 card mb-3" style="max-width: 300px;">
                 <div class="row no-gutters">
                   <div class="col-md-4">
-                    <img src="..." class="card-img" alt="...">
+                    <img th:src="${cartItem.urlImgPath}" class="card-img" alt="...">
                   </div>
                   <div class="col-md-8">
                     <div class="card-body">
-                      <h5 class="card-title">고등어 뱃살 1조각</h5>
-                      <p class="card-text"><small class="text-muted"><span class="badge badge-pill badge-success">재고 있음</span></small></p>
+                      <h5 th:text="${cartItem.itemName}" class="card-title"></h5>
+                      <p class="card-text">
+                        <small class="text-muted"><span th:test="${cartItem.itemStatus}" class="badge badge-pill badge-success"></span></small>
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -120,17 +122,17 @@
               <!-- quantity  -->
               <div class="form-group">
                 <label for="quantity_1">수량</label>
-                <input type="number" class="form-control" id="quantity_1" name="quantity_1" />
+                <input th:value="${cartItem.quantity}" type="number" class="form-control" id="quantity_1" name="quantity_1" />
               </div>
             </td>
-            <td class="col-3">
+            <td class="col-4">
               <!-- amount -->
-              <h2><span class="badge badge-pill badge-light">1000원</span></h2>
+              <h2><span th:text="${cartItem.price}" class="badge badge-pill badge-light"></span>원</h2>
             </td>
-            <td class="col-3">
+            <td class="col-2">
               <!-- btns -->
-              <button type="button" class="btn btn-primary btn-block">삭제</button>
-              <button type="button" class="btn btn-secondary btn-block">나중에 사기</button>
+              <button type="button" class="btn btn-outline-info btn-block">삭제</button>
+              <button type="button" class="btn btn-outline-info btn-block">나중에 사기</button>
             </td>
           </tr>
         </tbody>
