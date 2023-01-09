@@ -23,12 +23,13 @@
         , QUANTITY
         , CART_ID
         , PRODUCT_ITEM_ID
-      from CART_ITEM
+      FROM CART_ITEM
       WHERE CART_ID = (
         SELECT
           CART_ID
         FROM CART
         WHERE MEMBER_ID = #{memberId}
+        LIMIT 1
       )
     ) T1
     INNER JOIN (

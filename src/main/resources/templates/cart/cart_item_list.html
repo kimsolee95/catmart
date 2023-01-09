@@ -111,7 +111,7 @@
                     <div class="card-body">
                       <h5 th:text="${cartItem.itemName}" class="card-title"></h5>
                       <p class="card-text">
-                        <small class="text-muted"><span th:test="${cartItem.itemStatus}" class="badge badge-pill badge-success"></span></small>
+                        <small class="text-muted"><span th:text="${cartItem.itemStatus}" class="badge badge-pill badge-success"></span></small>
                       </p>
                     </div>
                   </div>
@@ -132,7 +132,6 @@
             <td class="col-2">
               <!-- btns -->
               <button type="button" class="btn btn-outline-info btn-block">삭제</button>
-              <button type="button" class="btn btn-outline-info btn-block">나중에 사기</button>
             </td>
           </tr>
         </tbody>
@@ -147,13 +146,13 @@
       <div class="container-md">
         <div class="row alert alert-light">
           <div class="col-3">
-            총 상품금액 <br/> 20000 원 <br/>
+            총 상품금액 <br/> <span>20000</span> 원 <br/>
           </div>
           <div class="col-3">
-            총 배송비 <br/> + 3000 원 <br/>
+            배송비 (금액 30,000원 이상 무료) <br/> + <span>3000</span> 원 <br/>
           </div>
           <div class="col-3">
-            <h3>결제 금액 23000원</h3>
+            <h3>결제 금액 <span>23000원</span></h3>
           </div>
           <div class="col-3">
             <button type="button" class="btn btn-info btn-block">구매하기</button>
