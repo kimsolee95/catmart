@@ -29,7 +29,7 @@
               let changeProductParam = {
                 cartItemId: this.parentNode.querySelector('input[type=hidden]').value
                 , quantity: this.value
-              }
+              };
 
               console.log('확인');
               console.log(changeProductParam);
@@ -71,6 +71,28 @@
         //전체 합계 금액 계산
         function calculateTotalPrice() {
           console.log('calculateTotalPrice coll 확인');
+
+          let totalPrice = 0;
+
+          document.querySelectorAll('.price').forEach(
+            function(item) {
+              console.log('item확인확인');
+              console.log(item);
+
+              let price = item.querySelector('span').innerHTML;
+              console.log('가격확인확인--->' + price);
+
+              let quantity = item.parentNode.parentNode.parentNode.querySelector('input[type=number]').value;
+              console.log('부모요소요소000>');
+              console.log(quantity);
+
+
+              totalPrice += price * quantity;
+            }
+          );
+
+          document.getElementById('totalPriceArea').innerHTML = totalPrice + '원';
+
         }
 
 
@@ -153,7 +175,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr th:each="cartItem, i : ${cartItemList}">
+          <tr th:each="cartItem, i : ${cartItemList}" class="cart-item">
             <td class="col-4">
               <!-- img -->
               <div class="border-0 card mb-3" style="max-width: 300px;">
@@ -182,8 +204,10 @@
             </td>
             <td class="col-4">
               <!-- price -->
-              <div class="price">
-                <h2><span th:text="${cartItem.price}" class="badge badge-pill badge-light price"></span>원</h2>
+              <div>
+                <h2 class="price">
+                  <span th:text="${cartItem.price}" class="badge badge-pill badge-light"></span>원
+                </h2>
               </div>
             </td>
             <td class="col-2">
@@ -209,7 +233,7 @@
             배송비 (금액 30,000원 이상 무료) <br/> + <span>3000</span> 원 <br/>
           </div>
           <div class="col-3">
-            <h3>결제 금액 <span>23000원</span></h3>
+            <h3>결제 금액 <span id="totalPriceArea">23000원</span></h3>
           </div>
           <div class="col-3">
             <button type="button" class="btn btn-info btn-block">구매하기</button>
