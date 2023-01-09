@@ -4,6 +4,7 @@ import com.shoptest.catmart.cart.domain.Cart;
 import com.shoptest.catmart.cart.domain.CartItem;
 import com.shoptest.catmart.cart.dto.CartItemAddInputDto;
 import com.shoptest.catmart.cart.dto.CartItemDetailDto;
+import com.shoptest.catmart.cart.dto.CartItemUpdateInputDto;
 import com.shoptest.catmart.cart.mapper.CartMapper;
 import com.shoptest.catmart.cart.repository.CartItemRepository;
 import com.shoptest.catmart.cart.repository.CartRepository;
@@ -92,6 +93,7 @@ public class CartServiceImpl implements CartService {
 
   }
 
+
   @Override
   public List<CartItemDetailDto> selectCartItemDetailList(String email) {
 
@@ -104,6 +106,42 @@ public class CartServiceImpl implements CartService {
     Member member = optionalMember.get();
 
     return cartMapper.selectCartItemDetailList(member.getMemberId());
+  }
+
+  @Transactional
+  @Override
+  public Long updateItemQuantityInCart(String email, CartItemUpdateInputDto parameter) {
+
+    //1. member data check
+    Optional<Member> optionalMember = memberRepository.findByEmail(email);
+    if (!optionalMember.isPresent()) {
+      //exception 처리 필요 -> 로그인 정보(email) 로 찾은 member data가 없을 때의 예외 처리
+      return null;
+    }
+    Member member = optionalMember.get();
+
+    //2. cart data check
+    Optional<Cart> optionalCart = cartRepository.findByMemberMemberId(member.getMemberId());
+    if (!optionalCart.isPresent()) {
+      //exception 처리 필요 -> 해당 회원의 장바구니가 없는 셈... 익셉션 처리 필요.
+      return null;
+    }
+
+    //3. product data check
+    //?? 장바구니는 수량 체크할 필요 없고 주문에서만 체크하도록 요구사항을 정하는 것이 통상적인 rule인지 아니면 장바구니도 수량 체크 - 재고 비교 해야 하는지... 확인 필요
+
+    //4. cartItem update
+    Optional<CartItem> optionalCartItem = cartItemRepository.findById(parameter.getCartItemId());
+    if (!optionalCartItem.isPresent()) {
+      //exception 처리 필요 -> 해당 장바구니 상품이 존재하지 않는 셈.. 익셉션
+      return null;
+    }
+    CartItem cartItem = optionalCartItem.get();
+    cartItem.setQuantity(parameter.getQuantity());
+    cartItem.setModifiedAt(LocalDateTime.now());
+    cartItemRepository.save(cartItem);
+
+    return cartItem.getCartItemId();
   }
 
 

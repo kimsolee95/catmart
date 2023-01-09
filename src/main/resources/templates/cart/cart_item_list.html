@@ -20,6 +20,60 @@
 
       window.addEventListener('DOMContentLoaded', function(){
 
+        document.querySelectorAll('.quantity').forEach(
+
+          function(item) {
+            //수량 value change event 감지
+            item.querySelector('input[type=number]').addEventListener('change', function() {
+
+              let changeProductParam = {
+                cartItemId: this.parentNode.querySelector('input[type=hidden]').value
+                , quantity: this.value
+              }
+
+              console.log('확인');
+              console.log(changeProductParam);
+              changeProductQuantity(changeProductParam);
+
+            });
+          }
+
+        );
+
+        //수량 input value 변경 시, 상품 row 한개의 값 변경
+        function changeProductQuantity(changeProductParam) {
+
+          let url = '/api/cart/update-quantity-req';
+
+          axios.put(url, changeProductParam).then(function(response) {
+
+            response.data = response.data || {};
+            response.data.responseResultHeader = response.data.responseResultHeader || {};
+
+            //fail
+            if (!response.data.responseResultHeader.result) {
+              alert('내부 서버 오류로 인해 장바구니 상품 수량이 변경되지 않았습니다.');
+              return false;
+            }
+
+            //success
+            //ui init call (전체 합계 금액)
+            calculateTotalPrice();
+
+          }).catch(function(error) {
+
+            console.log(error);
+          });
+
+
+        }
+
+        //전체 합계 금액 계산
+        function calculateTotalPrice() {
+          console.log('calculateTotalPrice coll 확인');
+        }
+
+
 
 
 
@@ -120,14 +174,17 @@
             </td>
             <td class="col-2">
               <!-- quantity  -->
-              <div class="form-group">
-                <label for="quantity_1">수량</label>
-                <input th:value="${cartItem.quantity}" type="number" class="form-control" id="quantity_1" name="quantity_1" />
+              <div class="form-group quantity">
+                <label th:for="'quantity_' + ${cartItem.cartItemId}">수량</label>
+                <input th:value="${cartItem.quantity}" type="number" class="form-control" th:id="'quantity_' + ${cartItem.cartItemId}" th:name="'quantity_' + ${cartItem.cartItemId}" />
+                <input type="hidden" th:value="${cartItem.cartItemId}"> <!-- 장바구니 상품 Key value -->
               </div>
             </td>
             <td class="col-4">
-              <!-- amount -->
-              <h2><span th:text="${cartItem.price}" class="badge badge-pill badge-light"></span>원</h2>
+              <!-- price -->
+              <div class="price">
+                <h2><span th:text="${cartItem.price}" class="badge badge-pill badge-light price"></span>원</h2>
+              </div>
             </td>
             <td class="col-2">
               <!-- btns -->
