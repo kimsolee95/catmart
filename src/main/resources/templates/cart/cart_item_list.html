@@ -20,6 +20,10 @@
 
       window.addEventListener('DOMContentLoaded', function(){
 
+        //결제 금액 init
+        calculateTotalPrice();
+
+        //각 장바구니 상품 내 이벤트 감지
         document.querySelectorAll('.quantity').forEach(
 
           function(item) {
@@ -31,8 +35,7 @@
                 , quantity: this.value
               };
 
-              console.log('확인');
-              console.log(changeProductParam);
+              //장바구니 수량 update
               changeProductQuantity(changeProductParam);
 
             });
@@ -57,7 +60,7 @@
             }
 
             //success
-            //ui init call (전체 합계 금액)
+            //전체 합계 금액 계산 call
             calculateTotalPrice();
 
           }).catch(function(error) {
@@ -70,28 +73,38 @@
 
         //전체 합계 금액 계산
         function calculateTotalPrice() {
-          console.log('calculateTotalPrice coll 확인');
 
           let totalPrice = 0;
 
           document.querySelectorAll('.price').forEach(
             function(item) {
-              console.log('item확인확인');
-              console.log(item);
 
               let price = item.querySelector('span').innerHTML;
-              console.log('가격확인확인--->' + price);
 
               let quantity = item.parentNode.parentNode.parentNode.querySelector('input[type=number]').value;
-              console.log('부모요소요소000>');
-              console.log(quantity);
-
 
               totalPrice += price * quantity;
             }
           );
 
-          document.getElementById('totalPriceArea').innerHTML = totalPrice + '원';
+          // 합계 금액 30,000원 이상 시, 배송비 무료
+          if (totalPrice >= 30000) {
+
+            let shippingFee = 0; //배송비
+            let addFeeTotalPrice = totalPrice + shippingFee;
+
+            document.getElementById('shipping-fee').innerHTML = shippingFee + '원'; //배송비
+            document.getElementById('except-shipping-fee').innerHTML = totalPrice + '원'; //배송비 제외 금액
+            document.getElementById('totalPriceArea').innerHTML = totalPrice + '원'; //배송비 합친 금액
+          } else if (totalPrice > 0) {
+
+            let shippingFee = 3000; //배송비
+            let addFeeTotalPrice = totalPrice + shippingFee;
+
+            document.getElementById('shipping-fee').innerHTML = shippingFee + '원'; //배송비
+            document.getElementById('except-shipping-fee').innerHTML = totalPrice + '원'; //배송비 제외 금액
+            document.getElementById('totalPriceArea').innerHTML = addFeeTotalPrice + '원'; //배송비 합친 금액
+          }
 
         }
 
@@ -227,13 +240,14 @@
       <div class="container-md">
         <div class="row alert alert-light">
           <div class="col-3">
-            총 상품금액 <br/> <span>20000</span> 원 <br/>
+            총 상품금액 <br/> <span id="except-shipping-fee"></span> <br/>
           </div>
           <div class="col-3">
-            배송비 (금액 30,000원 이상 무료) <br/> + <span>3000</span> 원 <br/>
+            배송비 (금액 30,000원 이상 무료) <br/> + <span id="shipping-fee"></span> <br/>
           </div>
           <div class="col-3">
-            <h3>결제 금액 <span id="totalPriceArea">23000원</span></h3>
+            <h3>결제 금액 <span id="totalPriceArea"></span>
+            </h3>
           </div>
           <div class="col-3">
             <button type="button" class="btn btn-info btn-block">구매하기</button>
