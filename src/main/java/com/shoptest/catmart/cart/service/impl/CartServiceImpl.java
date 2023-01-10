@@ -3,6 +3,7 @@ package com.shoptest.catmart.cart.service.impl;
 import com.shoptest.catmart.cart.domain.Cart;
 import com.shoptest.catmart.cart.domain.CartItem;
 import com.shoptest.catmart.cart.dto.CartItemAddInputDto;
+import com.shoptest.catmart.cart.dto.CartItemDeleteInputDto;
 import com.shoptest.catmart.cart.dto.CartItemDetailDto;
 import com.shoptest.catmart.cart.dto.CartItemUpdateInputDto;
 import com.shoptest.catmart.cart.mapper.CartMapper;
@@ -142,6 +143,31 @@ public class CartServiceImpl implements CartService {
     cartItemRepository.save(cartItem);
 
     return cartItem.getCartItemId();
+  }
+
+  @Transactional
+  @Override
+  public Long deleteItemInCart(String email, CartItemDeleteInputDto parameter) {
+
+    //member data check
+    Optional<Member> optionalMember = memberRepository.findByEmail(email);
+    if (!optionalMember.isPresent()) {
+      //exception.. member
+      return null;
+    }
+    Member member = optionalMember.get();
+
+    //cart data check
+    Optional<Cart> optionalCart = cartRepository.findByMemberMemberId(member.getMemberId());
+    if (!optionalCart.isPresent()) {
+      //exception.. cart
+      return null;
+    }
+    Cart cart = optionalCart.get();
+
+    //cartItem data delete
+    Long result = cartItemRepository.deleteByCartCartIdAndCartItemId(cart.getCartId(), parameter.getCartItemId());
+    return result;
   }
 
 
