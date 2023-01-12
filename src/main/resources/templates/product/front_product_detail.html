@@ -69,6 +69,12 @@
 
           }).catch(function(error) {
 
+            if (error.response) {
+              //요청 후, 서버가 2xx 범위 벗어나는 상태 코드를 주었다.(장바구니 익셉션 핸들러 코드 400.)
+              console.log(error.response.data);
+              alert(error.response.data.errorMessage);
+            }
+
             console.log(error);
           });
 
