@@ -10,6 +10,8 @@ import com.shoptest.catmart.cart.mapper.CartMapper;
 import com.shoptest.catmart.cart.repository.CartItemRepository;
 import com.shoptest.catmart.cart.repository.CartRepository;
 import com.shoptest.catmart.cart.service.CartService;
+import com.shoptest.catmart.common.exception.CartException;
+import com.shoptest.catmart.common.exception.type.CartErrorCode;
 import com.shoptest.catmart.member.domain.Member;
 import com.shoptest.catmart.member.repository.MemberRepository;
 import com.shoptest.catmart.product.domain.ProductItem;
@@ -42,8 +44,7 @@ public class CartServiceImpl implements CartService {
     //1. member data check
     Optional<Member> optionalMember = memberRepository.findByEmail(email);
     if (!optionalMember.isPresent()) {
-      //exception 처리 필요 -> 로그인 정보(email) 로 찾은 member data가 없을 때의 예외 처리
-      return null;
+      throw new CartException(CartErrorCode.USER_EMAIL_NOT_EXIST);
     }
     Member member = optionalMember.get();
 
@@ -66,7 +67,10 @@ public class CartServiceImpl implements CartService {
 
     //3. cartItem data check (by FK (cartId, productItemId))
     Optional<ProductItem> optionalProductItem = productItemRepository.findById(parameter.getProductItemId());
-    ProductItem wishProductItem = optionalProductItem.get(); //특정 상품상세 page 내에서 쓰이는 api이기 때문에 상품 ID에 대한 상품 value는 항상 있다고 가정?.. 보단 exception 추가 필요.
+    if (!optionalProductItem.isPresent()) {
+      throw new CartException(CartErrorCode.PRODUCT_ITEM_NOT_EXIST);
+    }
+    ProductItem wishProductItem = optionalProductItem.get();
 
     Optional<CartItem> optionalCartItem = cartItemRepository.findByCartCartIdAndProductItemProductItemId(
         cartOfMember.getCartId(), parameter.getProductItemId());
@@ -101,8 +105,7 @@ public class CartServiceImpl implements CartService {
     //1. member data
     Optional<Member> optionalMember = memberRepository.findByEmail(email);
     if (!optionalMember.isPresent()) {
-      //exception 처리 필요 -> 로그인 정보(email) 로 찾은 member data가 없을 때의 예외 처리
-      return null;
+      throw new CartException(CartErrorCode.USER_EMAIL_NOT_EXIST);
     }
     Member member = optionalMember.get();
 
@@ -116,16 +119,14 @@ public class CartServiceImpl implements CartService {
     //1. member data check
     Optional<Member> optionalMember = memberRepository.findByEmail(email);
     if (!optionalMember.isPresent()) {
-      //exception 처리 필요 -> 로그인 정보(email) 로 찾은 member data가 없을 때의 예외 처리
-      return null;
+      throw new CartException(CartErrorCode.USER_EMAIL_NOT_EXIST);
     }
     Member member = optionalMember.get();
 
     //2. cart data check
     Optional<Cart> optionalCart = cartRepository.findByMemberMemberId(member.getMemberId());
     if (!optionalCart.isPresent()) {
-      //exception 처리 필요 -> 해당 회원의 장바구니가 없는 셈... 익셉션 처리 필요.
-      return null;
+      throw new CartException(CartErrorCode.USER_CART_NOT_EXIST);
     }
 
     //3. product data check
@@ -134,8 +135,7 @@ public class CartServiceImpl implements CartService {
     //4. cartItem update
     Optional<CartItem> optionalCartItem = cartItemRepository.findById(parameter.getCartItemId());
     if (!optionalCartItem.isPresent()) {
-      //exception 처리 필요 -> 해당 장바구니 상품이 존재하지 않는 셈.. 익셉션
-      return null;
+      throw new CartException(CartErrorCode.USER_CART_ITEM_NOT_EXIST);
     }
     CartItem cartItem = optionalCartItem.get();
     cartItem.setQuantity(parameter.getQuantity());
@@ -152,16 +152,14 @@ public class CartServiceImpl implements CartService {
     //member data check
     Optional<Member> optionalMember = memberRepository.findByEmail(email);
     if (!optionalMember.isPresent()) {
-      //exception.. member
-      return null;
+      throw new CartException(CartErrorCode.USER_EMAIL_NOT_EXIST);
     }
     Member member = optionalMember.get();
 
     //cart data check
     Optional<Cart> optionalCart = cartRepository.findByMemberMemberId(member.getMemberId());
     if (!optionalCart.isPresent()) {
-      //exception.. cart
-      return null;
+      throw new CartException(CartErrorCode.USER_CART_NOT_EXIST);
     }
     Cart cart = optionalCart.get();
 

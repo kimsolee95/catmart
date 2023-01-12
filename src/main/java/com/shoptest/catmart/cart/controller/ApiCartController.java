@@ -5,6 +5,7 @@ import com.shoptest.catmart.cart.dto.CartItemDeleteInputDto;
 import com.shoptest.catmart.cart.dto.CartItemUpdateInputDto;
 import com.shoptest.catmart.cart.service.CartService;
 import com.shoptest.catmart.common.model.ResponseResult;
+import io.swagger.annotations.ApiOperation;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ public class ApiCartController {
 
   private final CartService cartService;
 
-  //장바구니 상품 담기
+  @ApiOperation(value="장바구니 - 로그인한 고객의 장바구니에 장바구니 상품을 담습니다.", notes = "장바구니 상품 data isnert or update")
   @PostMapping("/api/cart/add-req")
   public ResponseEntity<?> cartAddReq(
       Model model
@@ -42,7 +43,7 @@ public class ApiCartController {
     return ResponseEntity.ok().body(responseResult);
   }
 
-  //장바구니 내역 조회 - 장바구니 상품 수량 변경
+  @ApiOperation(value="장바구니 - 로그인한 고객의 장바구니 내 상품 수량을 변경합니다.", notes ="장바구니 상품 수량 update")
   @PutMapping("/api/cart/update-quantity-req")
   public ResponseEntity<?> cartProductQuantityUpdate(
       Model model
@@ -61,7 +62,8 @@ public class ApiCartController {
     return ResponseEntity.ok().body(responseResult);
   }
 
-  //장바구니 내역 조회 - 장바구니 상품 삭제
+
+  @ApiOperation(value="장바구니 - 로그인한 고객의 장바구니 내 상품을 삭제합니다.", notes="장바구니 상품 delete")
   @DeleteMapping("/api/cart/delete-product-req")
   public ResponseEntity<?> cartProductDelete(
       Model model
