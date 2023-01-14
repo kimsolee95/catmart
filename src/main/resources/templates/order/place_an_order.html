@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <!-- axios cdn -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+      window.addEventListener('DOMContentLoaded', function(){
+
+
+
+
+
+      }); //window.addEventListener
+
+    </script>
+  </th:block>
+
+  <th:block layout:fragment="css">
+    <style>
+
+      html {
+        position: relative;
+        min-height: 100%;
+        margin: 0;
+      }
+
+      body {
+        min-height: 100%;
+      }
+
+      .footer {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        padding: 15px 0;
+        text-align: center;
+      }
+
+      .header {
+        margin-bottom: 20px;
+
+      }
+
+      .content {
+        margin-bottom: 100px;
+        margin-top: 50px;
+        margin-left: 150px;
+        margin-right: 150px;
+      }
+
+      #sum-info-tab {
+        margin-top: 18px;
+      }
+
+      .order-info {
+        margin-bottom: 13px;
+      }
+
+
+    </style>
+  </th:block>
+
+</head>
+<body>
+
+  <div th:replace="fragments/header::header"></div>
+
+  <div class="content">
+
+    <!-- category info bar -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">
+          장바구니 > <span class="badge badge-primary">주문결제</span> > 결제완료
+        </li>
+      </ol>
+    </nav>
+
+    <!-- product detail area -->
+    <div class="container"> <!-- container-md-->
+
+      <!-- shipping-info -->
+      <table class="table table-borderless" style="margin-bottom: 20px;">
+        <thead>
+        <tr>
+          <th colspan="3">
+            <span class="btn btn-light">배송정보</span>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>받는 사람</th>
+            <td>김소리</td>
+          </tr>
+          <tr>
+            <th>휴대전화</th>
+            <td>01047176208</td>
+          </tr>
+          <tr>
+            <th>배송주소</th>
+            <td>서울특별시 서울역</td>
+          </tr>
+        </tbody>
+      </table>
+      <hr/>
+
+      <!-- 주문예정상품 - 장바구니 목록 -> 주문결제 page -->
+      <table class="table table-borderless order-info" id="cart-item-list" style="margin-bottom: 20px;"> <!-- container-md -->
+        <thead>
+          <tr>
+            <th colspan="3">
+              <span class="btn btn-light">주문상품</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="cartItem, i : ${cartItemList}" class="cart-item">
+            <td class="col-7">
+              <!-- img -->
+              <div class="border-0 card mb-3" style="max-width: 300px;">
+                <div class="row no-gutters">
+                  <div class="col-md-4">
+                    <img th:src="${cartItem.urlImgPath}" class="card-img" alt="...">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 th:text="${cartItem.itemName}" class="card-title"></h5>
+                      <p class="card-text">
+                        <small class="text-muted"><span th:text="${cartItem.itemStatus}" class="badge badge-pill badge-success"></span></small>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="col-2">
+              <!-- quantity  -->
+              <div class="form-group quantity">
+                <label th:for="'quantity_' + ${cartItem.cartItemId}">수량</label>
+                <input th:value="${cartItem.quantity}" type="number" class="form-control" th:id="'quantity_' + ${cartItem.cartItemId}" th:name="'quantity_' + ${cartItem.cartItemId}" />
+                <input type="hidden" th:value="${cartItem.cartItemId}"> <!-- 장바구니 상품 Key value -->
+              </div>
+            </td>
+            <td class="col-3">
+              <!-- price -->
+              <div>
+                <h2 class="price">
+                  <span th:text="${cartItem.price}" class="badge badge-pill badge-light"></span>원
+                </h2>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- amount of payment -->
+      <table class="table table-borderless order-info" style="margin-bottom: 20px;">
+        <thead class="thead-light">
+        <tr>
+          <th colspan="3">
+            최종 결제금액
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th>총 상품 금액</th>
+          <td>19000원</td>
+        </tr>
+        <tr>
+          <th>배송비</th>
+          <td>+3000원</td>
+        </tr>
+        <tr>
+          <th>총 결제금액</th>
+          <td><h3><span class="badge badge-pill badge-warning">22000원</span></h3></td>
+        </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+
+    <!-- 구매하기 영역 -->
+    <hr/>
+    <div class="d-flex justify-content-center" id="sum-info-tab">
+      <div class="container-md">
+        <div class="d-flex justify-content-center row alert alert-light">
+          <span>위 주문 내용을 확인하였으며 결제하겠습니다.</span>
+        </div>
+        <div class="row">
+          <button type="button" class="btn btn-info btn-block">결제하기</button>
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+
+  <div th:replace="fragments/footer::footer"></div>
+
+</body>
+</html>
