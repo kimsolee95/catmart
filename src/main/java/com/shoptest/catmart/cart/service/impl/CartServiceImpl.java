@@ -45,28 +45,13 @@ public class CartServiceImpl implements CartService {
     Member member = getMember(email);
 
     //2. member`s cart data check
-    Cart cartOfMember = null;
-    Optional<Cart> optionalCart = cartRepository.findByMemberMemberId(member.getMemberId());
-
-    if (!optionalCart.isPresent()) {
-
-      //회원 - 장바구니 (1:1) 이므로 create cart
-      Cart newCart = Cart.builder()
-          .member(member)
-          .createdAt(LocalDateTime.now())
-          .build();
-      cartOfMember = cartRepository.save(newCart);
-    } else {
-
-      cartOfMember = optionalCart.get();
-    }
+    //회원 - 장바구니 (1:1) 이므로 member`s cart가 없다면 create cart 메서드 실행
+    Cart cartOfMember = cartRepository.findByMemberMemberId(member.getMemberId())
+        .orElseGet(() -> createNewCart(member));
 
     //3. cartItem data check (by FK (cartId, productItemId))
-    Optional<ProductItem> optionalProductItem = productItemRepository.findById(parameter.getProductItemId());
-    if (!optionalProductItem.isPresent()) {
-      throw new CartException(CartErrorCode.PRODUCT_ITEM_NOT_EXIST);
-    }
-    ProductItem wishProductItem = optionalProductItem.get();
+    ProductItem wishProductItem = productItemRepository.findById(parameter.getProductItemId())
+        .orElseThrow(() -> new CartException(CartErrorCode.PRODUCT_ITEM_NOT_EXIST));
 
     Optional<CartItem> optionalCartItem = cartItemRepository.findByCartCartIdAndProductItemProductItemId(
         cartOfMember.getCartId(), parameter.getProductItemId());
@@ -91,7 +76,6 @@ public class CartServiceImpl implements CartService {
       cartItemRepository.save(existCartItem);
       return existCartItem.getCartItemId();
     }
-
   }
 
 
@@ -100,7 +84,6 @@ public class CartServiceImpl implements CartService {
 
     //1. member data
     Member member = getMember(email);
-
     return cartMapper.selectCartItemDetailList(member.getMemberId());
   }
 
@@ -112,20 +95,15 @@ public class CartServiceImpl implements CartService {
     Member member = getMember(email);
 
     //2. cart data check
-    Optional<Cart> optionalCart = cartRepository.findByMemberMemberId(member.getMemberId());
-    if (!optionalCart.isPresent()) {
-      throw new CartException(CartErrorCode.USER_CART_NOT_EXIST);
-    }
+    validateCartExistence(member);
 
     //3. product data check
     //?? 장바구니는 수량 체크할 필요 없고 주문에서만 체크하도록 요구사항을 정하는 것이 통상적인 rule인지 아니면 장바구니도 수량 체크 - 재고 비교 해야 하는지... 확인 필요
 
     //4. cartItem update
-    Optional<CartItem> optionalCartItem = cartItemRepository.findById(parameter.getCartItemId());
-    if (!optionalCartItem.isPresent()) {
-      throw new CartException(CartErrorCode.USER_CART_ITEM_NOT_EXIST);
-    }
-    CartItem cartItem = optionalCartItem.get();
+    CartItem cartItem = cartItemRepository.findById(parameter.getCartItemId())
+            .orElseThrow(() -> new CartException(CartErrorCode.USER_CART_ITEM_NOT_EXIST));
+
     cartItem.setQuantity(parameter.getQuantity());
     cartItem.setModifiedAt(LocalDateTime.now());
     cartItemRepository.save(cartItem);
@@ -141,21 +119,37 @@ public class CartServiceImpl implements CartService {
     Member member = getMember(email);
 
     //cart data check
-    Optional<Cart> optionalCart = cartRepository.findByMemberMemberId(member.getMemberId());
-    if (!optionalCart.isPresent()) {
-      throw new CartException(CartErrorCode.USER_CART_NOT_EXIST);
-    }
-    Cart cart = optionalCart.get();
+    Cart cart = validateCartExistence(member);
 
     //cartItem data delete
-    Long result = cartItemRepository.deleteByCartCartIdAndCartItemId(cart.getCartId(), parameter.getCartItemId());
-    return result;
+    return cartItemRepository.deleteByCartCartIdAndCartItemId(cart.getCartId(), parameter.getCartItemId());
   }
 
   private Member getMember(String email) {
+
     return memberRepository.findByEmail(email)
         .orElseThrow(() -> new CartException(CartErrorCode.USER_EMAIL_NOT_EXIST));
   }
 
+  /**
+   * 회원 - 장바구니 (1:1) 이므로 cart가 없다면  create cart
+   * */
+  private Cart createNewCart(Member member) {
+
+      Cart newCart = Cart.builder()
+          .member(member)
+          .createdAt(LocalDateTime.now())
+          .build();
+    return cartRepository.save(newCart);
+  }
+
+  /**
+   * 장바구니 상품 data update or delete 시, 해당 회원의 장바구니 데이터 validation check
+   * */
+  private Cart validateCartExistence(Member member) {
+
+    return cartRepository.findByMemberMemberId(member.getMemberId())
+        .orElseThrow(() -> new CartException(CartErrorCode.USER_CART_NOT_EXIST));
+  }
 
 }
