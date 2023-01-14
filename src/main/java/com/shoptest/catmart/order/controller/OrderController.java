@@ -1,4 +1,4 @@
-package com.shoptest.catmart.order;
+package com.shoptest.catmart.order.controller;
 
 import com.shoptest.catmart.cart.service.CartService;
 import java.security.Principal;

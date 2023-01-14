@@ -53,11 +53,11 @@
             response.data = response.data || {};
             response.data.responseResultHeader = response.data.responseResultHeader || {};
 
-            //fail
-            if (!response.data.responseResultHeader.result) {
-              alert('내부 서버 오류로 인해 장바구니 상품 수량이 변경되지 않았습니다.');
-              return false;
-            }
+            //fail (01.14 해당 컨트톨러 내에서의 잘못된 분기처리를 통한 응답값 내려주기를 수정하였으므로 이 라인을 주석 처리.)
+<!--            if (!response.data.responseResultHeader.result) {-->
+<!--              alert('내부 서버 오류로 인해 장바구니 상품 수량이 변경되지 않았습니다.');-->
+<!--              return false;-->
+<!--            }-->
 
             //success
             //전체 합계 금액 계산 call
@@ -143,11 +143,11 @@
             response.data = response.data || {};
             response.data.responseResultHeader = response.data.responseResultHeader || {};
 
-            //fail
-            if (!response.data.responseResultHeader.result) {
-              alert('내부 서버 오류로 인해 장바구니 상품이 삭제되지 않았습니다.');
-              return false;
-            }
+            //fail (01.14 해당 컨트톨러 내에서의 잘못된 분기처리를 통한 응답값 내려주기를 수정하였으므로 이 라인을 주석 처리.)
+<!--            if (!response.data.responseResultHeader.result) {-->
+<!--              alert('내부 서버 오류로 인해 장바구니 상품이 삭제되지 않았습니다.');-->
+<!--              return false;-->
+<!--            }-->
 
             //success
             //load page
