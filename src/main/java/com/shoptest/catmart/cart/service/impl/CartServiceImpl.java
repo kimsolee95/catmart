@@ -42,11 +42,7 @@ public class CartServiceImpl implements CartService {
   public Long addItemInCart(String email, CartItemAddInputDto parameter) {
 
     //1. member data check
-    Optional<Member> optionalMember = memberRepository.findByEmail(email);
-    if (!optionalMember.isPresent()) {
-      throw new CartException(CartErrorCode.USER_EMAIL_NOT_EXIST);
-    }
-    Member member = optionalMember.get();
+    Member member = getMember(email);
 
     //2. member`s cart data check
     Cart cartOfMember = null;
@@ -103,11 +99,7 @@ public class CartServiceImpl implements CartService {
   public List<CartItemDetailDto> selectCartItemDetailList(String email) {
 
     //1. member data
-    Optional<Member> optionalMember = memberRepository.findByEmail(email);
-    if (!optionalMember.isPresent()) {
-      throw new CartException(CartErrorCode.USER_EMAIL_NOT_EXIST);
-    }
-    Member member = optionalMember.get();
+    Member member = getMember(email);
 
     return cartMapper.selectCartItemDetailList(member.getMemberId());
   }
@@ -117,11 +109,7 @@ public class CartServiceImpl implements CartService {
   public Long updateItemQuantityInCart(String email, CartItemUpdateInputDto parameter) {
 
     //1. member data check
-    Optional<Member> optionalMember = memberRepository.findByEmail(email);
-    if (!optionalMember.isPresent()) {
-      throw new CartException(CartErrorCode.USER_EMAIL_NOT_EXIST);
-    }
-    Member member = optionalMember.get();
+    Member member = getMember(email);
 
     //2. cart data check
     Optional<Cart> optionalCart = cartRepository.findByMemberMemberId(member.getMemberId());
@@ -150,11 +138,7 @@ public class CartServiceImpl implements CartService {
   public Long deleteItemInCart(String email, CartItemDeleteInputDto parameter) {
 
     //member data check
-    Optional<Member> optionalMember = memberRepository.findByEmail(email);
-    if (!optionalMember.isPresent()) {
-      throw new CartException(CartErrorCode.USER_EMAIL_NOT_EXIST);
-    }
-    Member member = optionalMember.get();
+    Member member = getMember(email);
 
     //cart data check
     Optional<Cart> optionalCart = cartRepository.findByMemberMemberId(member.getMemberId());
@@ -166,6 +150,11 @@ public class CartServiceImpl implements CartService {
     //cartItem data delete
     Long result = cartItemRepository.deleteByCartCartIdAndCartItemId(cart.getCartId(), parameter.getCartItemId());
     return result;
+  }
+
+  private Member getMember(String email) {
+    return memberRepository.findByEmail(email)
+        .orElseThrow(() -> new CartException(CartErrorCode.USER_EMAIL_NOT_EXIST));
   }
 
 
