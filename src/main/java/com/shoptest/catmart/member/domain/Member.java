@@ -41,7 +41,10 @@ public class Member {
   
   /* 비밀번호 */
   private String password;
-  
+
+  /* 핸드폰 번호 */
+  private String phoneNumber;
+
   /* 주소 */
   private String address;
   

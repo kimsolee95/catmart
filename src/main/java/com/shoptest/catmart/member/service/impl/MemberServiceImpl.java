@@ -1,6 +1,9 @@
 package com.shoptest.catmart.member.service.impl;
 
+import com.shoptest.catmart.common.exception.CartException;
+import com.shoptest.catmart.common.exception.type.CartErrorCode;
 import com.shoptest.catmart.member.domain.Member;
+import com.shoptest.catmart.member.dto.MemberAddressDto;
 import com.shoptest.catmart.member.dto.MemberInputDto;
 import com.shoptest.catmart.member.repository.MemberRepository;
 import com.shoptest.catmart.member.service.MemberService;
@@ -38,6 +41,7 @@ public class MemberServiceImpl implements MemberService {
         .email(parameter.getEmail())
         .name(parameter.getName())
         .password(encPassword)
+        .phoneNumber(parameter.getPhoneNumber())
         .address(parameter.getAddress())
         .zipcode(parameter.getZipcode())
         .addressDetail(parameter.getAddressDetail())
@@ -47,6 +51,20 @@ public class MemberServiceImpl implements MemberService {
 
     memberRepository.save(member);
     return true;
+  }
+
+  @Override
+  public MemberAddressDto selectMemberAddress(String email) {
+    Member member = memberRepository.findByEmail(email)
+        .orElseThrow(() -> new UsernameNotFoundException("회원 정보가 없습니다."));
+
+    MemberAddressDto memberAddressDto = new MemberAddressDto();
+    memberAddressDto.setName(member.getName());
+    memberAddressDto.setPhoneNumber(member.getPhoneNumber());
+    memberAddressDto.setAddress(member.getAddress());
+    memberAddressDto.setAddressDetail(member.getAddressDetail());
+    memberAddressDto.setZipcode(member.getZipcode());
+    return memberAddressDto;
   }
 
   @Override
