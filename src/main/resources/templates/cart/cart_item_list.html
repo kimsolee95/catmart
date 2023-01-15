@@ -31,8 +31,9 @@
             item.querySelector('input[type=number]').addEventListener('change', function() {
 
               let changeProductParam = {
-                cartItemId: this.parentNode.querySelector('input[type=hidden]').value
+                cartItemId: this.parentNode.querySelector('.cart-item-id').value //input[type=hidden]
                 , quantity: this.value
+                , stock: this.parentNode.querySelector('.product-stock').value //product-stock
               };
 
               //장바구니 수량 update
@@ -271,7 +272,8 @@
               <div class="form-group quantity">
                 <label th:for="'quantity_' + ${cartItem.cartItemId}">수량</label>
                 <input th:value="${cartItem.quantity}" type="number" class="form-control" th:id="'quantity_' + ${cartItem.cartItemId}" th:name="'quantity_' + ${cartItem.cartItemId}" />
-                <input type="hidden" th:value="${cartItem.cartItemId}"> <!-- 장바구니 상품 Key value -->
+                <input type="hidden" th:value="${cartItem.cartItemId}" class="cart-item-id"> <!-- 장바구니 상품 Key value -->
+                <input type="hidden" th:value="${cartItem.stock}" class="product-stock"> <!-- 해당 상품의 재고  -->
               </div>
             </td>
             <td class="col-4">

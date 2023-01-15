@@ -8,12 +8,15 @@ import lombok.Setter;
  * */
 @Getter
 @Setter
-public class CartItemUpdateInputDto {
+public class  CartItemUpdateInputDto {
 
   /* 상품 Id */
   private Long cartItemId;
 
   /* 장바구니_상품 개수 */
   private int quantity;
+
+  /* 해당 상품 재고 */
+  private int stock;
 
 }
