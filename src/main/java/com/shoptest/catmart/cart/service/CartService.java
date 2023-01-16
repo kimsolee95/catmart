@@ -19,6 +19,9 @@ public interface CartService {
   Long updateItemQuantityInCart(String email, CartItemUpdateInputDto parameter);
 
   /* 고객 - 장바구니 내역 목록 > 장바구니 상품 삭제 */
-  Long deleteItemInCart(String email, CartItemDeleteInputDto parameter);
+  Long deleteItemInCart(String email, Long cartItemId);
+
+  /* 주문 처리 이후, 고객의 장바구니_상품 일괄 삭제 */
+  void deleteAllCartItem(Long cartId);
 
 }

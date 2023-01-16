@@ -1,7 +1,11 @@
 package com.shoptest.catmart.order.domain;
 
+import com.shoptest.catmart.cart.dto.CartItemDetailDto;
+import com.shoptest.catmart.common.exception.OrderException;
+import com.shoptest.catmart.common.exception.type.OrderErrorCode;
 import com.shoptest.catmart.member.domain.Member;
 import com.shoptest.catmart.order.type.OrderStatus;
+import com.shoptest.catmart.product.domain.ProductItem;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +66,30 @@ public class Orders {
 
   /* 수정일자 */
   private LocalDateTime modifiedAt;
+
+  /* 주문_상품 생성하기 */
+  public OrdersItem createOrdersItem(ProductItem productItem, CartItemDetailDto toBeOrderItems) {
+
+    OrdersItem ordersItem = OrdersItem.builder()
+        .orders(this)
+        .quantity(toBeOrderItems.getQuantity())
+        .productItem(productItem)
+        .orderPrice(productItem.getPrice() * toBeOrderItems.getQuantity())
+        .createdAt(LocalDateTime.now())
+        .build();
+    return ordersItem;
+  }
+
+  /* 주문 생성하기 */
+  public Orders createOrders(Member member, Orders orders, List<OrdersItem> ordersItemList) {
+
+    orders.setMember(member);
+    orders.setOrdersItemList(ordersItemList);
+    orders.setOrdersStatus(OrderStatus.TAKE_ORDER);
+    orders.setOrdersDate(LocalDateTime.now());
+    orders.setCreatedAt(LocalDateTime.now());
+    return orders;
+  }
 
 
 }

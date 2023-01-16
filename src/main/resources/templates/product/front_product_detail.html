@@ -45,7 +45,7 @@
             return false;
           }
 
-          let url = '/api/cart/add-req';
+          let url = '/api/cart/cartItem';
           let quantity = quantityInput.value;
 
           let parameter = {
@@ -57,12 +57,6 @@
 
             response.data = response.data || {};
             response.data.responseResultHeader = response.data.responseResultHeader || {};
-
-            //fail (01.14 해당 컨트톨러 내에서의 잘못된 분기처리를 통한 응답값 내려주기를 수정하였으므로 이 라인을 주석 처리.)
-<!--            if (!response.data.responseResultHeader.result) {-->
-<!--              alert('내부 서버 오류로 인해 장바구니에 상품을 담을 수 없습니다.');-->
-<!--              return false;-->
-<!--            }-->
 
             //success
             alert('장바구니에 해당 상품을 담았습니다.');

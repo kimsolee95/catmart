@@ -1,21 +1,22 @@
 package com.shoptest.catmart.common.exception.model;
 
-import com.shoptest.catmart.common.exception.type.CartErrorCode;
+import com.shoptest.catmart.common.exception.type.OrderErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 /**
- *  장바구니 API 에러 공통 응답 객체
+ *  주문 API 에러 공통 응답 객체
  * */
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CartErrorResponse {
+public class OrderErrorResponse {
 
-  private CartErrorCode errorCode;
+  private OrderErrorCode errorCode;
   private String errorMessage;
 }

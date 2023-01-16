@@ -53,6 +53,12 @@ public class CartServiceImpl implements CartService {
     ProductItem wishProductItem = productItemRepository.findById(parameter.getProductItemId())
         .orElseThrow(() -> new CartException(CartErrorCode.PRODUCT_ITEM_NOT_EXIST));
 
+    //product data check
+    //주문 확인서에서 수량 바꾸기 불가능함. 이용자 편의성 위해 처음 장바구니에서 수량 update 이벤트 발생 시, 재고 이상으로 수량 담는 것이 불가능하게끔 익셉션 처리 추가
+    if (wishProductItem.getStock() < parameter.getQuantity()) {
+      throw new CartException(CartErrorCode.OVER_QUANTITY);
+    }
+
     Optional<CartItem> optionalCartItem = cartItemRepository.findByCartCartIdAndProductItemProductItemId(
         cartOfMember.getCartId(), parameter.getProductItemId());
 
@@ -91,16 +97,19 @@ public class CartServiceImpl implements CartService {
   @Override
   public Long updateItemQuantityInCart(String email, CartItemUpdateInputDto parameter) {
 
+    //product data check
+    //주문 확인서에서 수량 바꾸기 불가능함. 이용자 편의성 위해 처음 장바구니에서 수량 update 이벤트 발생 시, 재고 이상으로 수량 담는 것이 불가능하게끔 익셉션 처리 추가
+    if (parameter.getQuantity() > parameter.getStock()) {
+      throw new CartException(CartErrorCode.OVER_QUANTITY);
+    }
+
     //1. member data check
     Member member = getMember(email);
 
     //2. cart data check
     validateCartExistence(member);
 
-    //3. product data check
-    //?? 장바구니는 수량 체크할 필요 없고 주문에서만 체크하도록 요구사항을 정하는 것이 통상적인 rule인지 아니면 장바구니도 수량 체크 - 재고 비교 해야 하는지... 확인 필요
-
-    //4. cartItem update
+    //3. cartItem update
     CartItem cartItem = cartItemRepository.findById(parameter.getCartItemId())
             .orElseThrow(() -> new CartException(CartErrorCode.USER_CART_ITEM_NOT_EXIST));
 
@@ -113,7 +122,7 @@ public class CartServiceImpl implements CartService {
 
   @Transactional
   @Override
-  public Long deleteItemInCart(String email, CartItemDeleteInputDto parameter) {
+  public Long deleteItemInCart(String email, Long cartItemId) {
 
     //member data check
     Member member = getMember(email);
@@ -122,7 +131,12 @@ public class CartServiceImpl implements CartService {
     Cart cart = validateCartExistence(member);
 
     //cartItem data delete
-    return cartItemRepository.deleteByCartCartIdAndCartItemId(cart.getCartId(), parameter.getCartItemId());
+    return cartItemRepository.deleteByCartCartIdAndCartItemId(cart.getCartId(), cartItemId);
+  }
+
+  @Override
+  public void deleteAllCartItem(Long cartId) {
+    cartItemRepository.deleteByCartCartId(cartId);
   }
 
   private Member getMember(String email) {

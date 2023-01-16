@@ -18,13 +18,95 @@
   <th:block layout:fragment="script">
     <script th:inline="javascript">
 
-      window.addEventListener('DOMContentLoaded', function(){
+      window.addEventListener('DOMContentLoaded', function() {
 
+        //금액 setting
+        init();
 
-
+        //결제하기 버튼 클릭 이벤트
+        document.querySelector('#btn-order').addEventListener('click', function() {
+          //주문 생성 api call
+          callOrderCreateApi();
+        });
 
 
       }); //window.addEventListener
+
+      //화면 로딩 시, 필요한 금액 정보 setting
+      async function init() {
+
+        let totalPrice = await calculateEachProduct(); //1. 총 금액 계산하기
+        await markTotalPrice(totalPrice); //2. 계산한 총 금액 바탕으로 배송비 더한 값 ui 출력
+      }
+
+      //각 상품마다의 개수 * 금액 계산
+      function calculateEachProduct() {
+
+        return new Promise(function(resolve, reject) {
+
+          let totalPrice = 0; //총 결제금액
+
+          document.querySelectorAll('.quantity').forEach(
+
+            function(item) {
+
+              let quantity = item.querySelector('span').innerHTML; //수량
+              let eachPrice = item.parentNode.nextElementSibling.querySelector('input[type=hidden]').value; //각각 1개 가격
+              let productPrice = quantity * eachPrice; //각 상품의 수량 곱한 가격
+
+              item.parentNode.nextElementSibling.querySelector('span').innerHTML = productPrice + '원';
+              totalPrice += productPrice;
+            }
+          );
+
+          resolve(totalPrice);
+        });
+
+      }
+
+      //각 상품의 금액 합한 총 주문 금액 계산
+      function markTotalPrice(totalPrice) {
+
+        return new Promise(function(resolve, reject) {
+
+          //배송비
+          let shippingFee = (totalPrice > 30000) ? 0 : 3000;
+
+          //최종 상품 금액 표시
+          document.querySelector('#total-product-price').innerHTML = totalPrice + '원';
+          document.querySelector('#shipping-fee').innerHTML = shippingFee;
+          document.querySelector('#total-payment').innerHTML = totalPrice + shippingFee;
+
+          resolve();
+        });
+      }
+
+      //주문 생성 api 호출
+      function callOrderCreateApi() {
+
+        let url = '/api/order/cartItem';
+
+        axios.post(url).then(function(response) {
+
+          response.data = response.data || {};
+          response.data.responseResultHeader = response.data.responseResultHeader || {};
+
+          //success
+          //전체 합계 금액 계산 call
+          alert('결제가 완료되었습니다.');
+
+        }).catch(function(error) {
+
+          if (error.response) {
+            //요청 후, 서버가 2xx 범위 벗어나는 상태 코드를 주었다.(장바구니 익셉션 핸들러 코드 400.)
+            console.log(error.response.data);
+            alert(error.response.data.errorMessage);
+          }
+
+          console.log(error);
+        });
+
+      }
 
     </script>
   </th:block>
@@ -100,33 +182,34 @@
         <thead>
         <tr>
           <th colspan="3">
-            <span class="btn btn-light">배송정보</span>
+            <span class="btn btn-primary">배송정보</span>
           </th>
         </tr>
         </thead>
         <tbody>
           <tr>
             <th>받는 사람</th>
-            <td>김소리</td>
+            <td th:text="${shippingAddress.name}"></td>
           </tr>
           <tr>
             <th>휴대전화</th>
-            <td>01047176208</td>
+            <td th:text="${shippingAddress.phoneNumber}"></td>
           </tr>
           <tr>
             <th>배송주소</th>
-            <td>서울특별시 서울역</td>
+            <td>
+              <span th:text="${shippingAddress.address}"></span> <span th:text="${shippingAddress.addressDetail}"></span>
+            </td>
           </tr>
         </tbody>
       </table>
-      <hr/>
 
       <!-- 주문예정상품 - 장바구니 목록 -> 주문결제 page -->
       <table class="table table-borderless order-info" id="cart-item-list" style="margin-bottom: 20px;"> <!-- container-md -->
-        <thead>
+        <thead class="thead-light">
           <tr>
             <th colspan="3">
-              <span class="btn btn-light">주문상품</span>
+              주문상품
             </th>
           </tr>
         </thead>
@@ -153,8 +236,9 @@
             <td class="col-2">
               <!-- quantity  -->
               <div class="form-group quantity">
-                <label th:for="'quantity_' + ${cartItem.cartItemId}">수량</label>
-                <input th:value="${cartItem.quantity}" type="number" class="form-control" th:id="'quantity_' + ${cartItem.cartItemId}" th:name="'quantity_' + ${cartItem.cartItemId}" />
+                <h5>
+                  수량 <span th:text="${cartItem.quantity}"></span> 개
+                </h5>
                 <input type="hidden" th:value="${cartItem.cartItemId}"> <!-- 장바구니 상품 Key value -->
               </div>
             </td>
@@ -162,7 +246,8 @@
               <!-- price -->
               <div>
                 <h2 class="price">
-                  <span th:text="${cartItem.price}" class="badge badge-pill badge-light"></span>원
+                  <span th:text="${cartItem.price}" class="badge badge-pill badge-light"></span>
+                  <input type="hidden" th:value="${cartItem.price}">
                 </h2>
               </div>
             </td>
@@ -182,15 +267,15 @@
         <tbody>
         <tr>
           <th>총 상품 금액</th>
-          <td>19000원</td>
+          <td id="total-product-price"></td>
         </tr>
         <tr>
           <th>배송비</th>
-          <td>+3000원</td>
+          <td>+<span id="shipping-fee"></span>원</td>
         </tr>
         <tr>
           <th>총 결제금액</th>
-          <td><h3><span class="badge badge-pill badge-warning">22000원</span></h3></td>
+          <td><h3><span class="badge badge-pill badge-warning" id="total-payment"></span>원</h3></td>
         </tr>
         </tbody>
       </table>
@@ -206,7 +291,7 @@
           <span>위 주문 내용을 확인하였으며 결제하겠습니다.</span>
         </div>
         <div class="row">
-          <button type="button" class="btn btn-info btn-block">결제하기</button>
+          <button type="button" class="btn btn-info btn-block" id="btn-order">결제하기</button>
         </div>
       </div>
     </div>
