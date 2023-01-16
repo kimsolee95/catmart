@@ -134,6 +134,11 @@ public class CartServiceImpl implements CartService {
     return cartItemRepository.deleteByCartCartIdAndCartItemId(cart.getCartId(), parameter.getCartItemId());
   }
 
+  @Override
+  public void deleteAllCartItem(Long cartId) {
+    cartItemRepository.deleteByCartCartId(cartId);
+  }
+
   private Member getMember(String email) {
 
     return memberRepository.findByEmail(email)

@@ -168,9 +168,10 @@
 
         }
 
-
-
-
+        //구매하기 버튼 클릭 이벤트
+        document.querySelector('#btn-purchase').addEventListener('click', function() {
+          location.href = '/order/from-cart';
+        });
 
       }); //window.addEventListener
 
@@ -311,7 +312,7 @@
             </h4>
           </div>
           <div class="col-3">
-            <button type="button" class="btn btn-info btn-block">구매하기</button>
+            <button type="button" class="btn btn-info btn-block" id="btn-purchase">구매하기</button>
           </div>
         </div>
       </div>

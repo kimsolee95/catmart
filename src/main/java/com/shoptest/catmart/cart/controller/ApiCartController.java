@@ -31,11 +31,6 @@ public class ApiCartController {
     String email = principal.getName();
     Long savedCartItemId = cartService.addItemInCart(email, parameter);
 
-//    if (savedCartItemId == null) {
-//      ResponseResult responseResult = new ResponseResult(false);
-//      return ResponseEntity.ok().body(responseResult);
-//    }
-
     ResponseResult responseResult = new ResponseResult(true);
     return ResponseEntity.ok().body(responseResult);
   }
@@ -46,11 +41,6 @@ public class ApiCartController {
 
     String email = principal.getName();
     Long updatedCartItemId = cartService.updateItemQuantityInCart(email, parameter);
-
-//    if (updatedCartItemId == null) {
-//      ResponseResult responseResult = new ResponseResult(false);
-//      return ResponseEntity.ok().body(responseResult);
-//    }
 
     ResponseResult responseResult = new ResponseResult(true);
     return ResponseEntity.ok().body(responseResult);
@@ -64,10 +54,6 @@ public class ApiCartController {
     String email = principal.getName();
 
     Long deletedCartItemId = cartService.deleteItemInCart(email, parameter);
-//    if (deletedCartItemId == null) {
-//      ResponseResult responseResult = new ResponseResult(false);
-//      return ResponseEntity.ok().body(responseResult);
-//    }
 
     ResponseResult responseResult = new ResponseResult(true);
     return ResponseEntity.ok().body(responseResult);

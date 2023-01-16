@@ -23,8 +23,16 @@
         //금액 setting
         init();
 
+        //결제하기 버튼 클릭 이벤트
+        document.querySelector('#btn-order').addEventListener('click', function() {
+          //주문 생성 api call
+          callOrderCreateApi();
+        });
+
+
       }); //window.addEventListener
 
+      //화면 로딩 시, 필요한 금액 정보 setting
       async function init() {
 
         let totalPrice = await calculateEachProduct(); //1. 총 금액 계산하기
@@ -56,6 +64,7 @@
 
       }
 
+      //각 상품의 금액 합한 총 주문 금액 계산
       function markTotalPrice(totalPrice) {
 
         return new Promise(function(resolve, reject) {
@@ -70,6 +79,33 @@
 
           resolve();
         });
+      }
+
+      //주문 생성 api 호출
+      function callOrderCreateApi() {
+
+        let url = '/api/order/from-cart';
+
+        axios.post(url).then(function(response) {
+
+          response.data = response.data || {};
+          response.data.responseResultHeader = response.data.responseResultHeader || {};
+
+          //success
+          //전체 합계 금액 계산 call
+          alert('결제가 완료되었습니다.');
+
+        }).catch(function(error) {
+
+          if (error.response) {
+            //요청 후, 서버가 2xx 범위 벗어나는 상태 코드를 주었다.(장바구니 익셉션 핸들러 코드 400.)
+            console.log(error.response.data);
+            alert(error.response.data.errorMessage);
+          }
+
+          console.log(error);
+        });
+
       }
 
     </script>
@@ -255,7 +291,7 @@
           <span>위 주문 내용을 확인하였으며 결제하겠습니다.</span>
         </div>
         <div class="row">
-          <button type="button" class="btn btn-info btn-block">결제하기</button>
+          <button type="button" class="btn btn-info btn-block" id="btn-order">결제하기</button>
         </div>
       </div>
     </div>
