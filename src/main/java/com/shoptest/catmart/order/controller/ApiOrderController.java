@@ -17,7 +17,7 @@ public class ApiOrderController {
 
   private final OrderService orderService;
 
-  @PostMapping("/api/orderForCartItem")
+  @PostMapping("/api/order/cartItem")
   public ResponseEntity<?> createOrderFromCart(Model model, Principal principal) {
 
     String email = principal.getName();

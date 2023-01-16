@@ -85,7 +85,7 @@ public class Orders {
 
     orders.setMember(member);
     orders.setOrdersItemList(ordersItemList);
-    orders.setOrdersStatus(OrderStatus.PAY_FOR_ORDER);
+    orders.setOrdersStatus(OrderStatus.TAKE_ORDER);
     orders.setOrdersDate(LocalDateTime.now());
     orders.setCreatedAt(LocalDateTime.now());
     return orders;

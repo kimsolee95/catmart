@@ -47,7 +47,7 @@
         //수량 input value 변경 시, 상품 row 한개의 값 변경
         function changeProductQuantity(changeProductParam) {
 
-          let url = '/api/cart/updateItemsQuantity';
+          let url = '/api/cart/cartItem';
 
           axios.put(url, changeProductParam).then(function(response) {
 
@@ -125,7 +125,7 @@
         //장바구니 상품 삭제 처리
         function deleteProduct(cartItemId) {
 
-          let url = '/api/cart/deleteProduct/' + cartItemId;
+          let url = '/api/cart/cartItem/' + cartItemId;
           //delete -> config 내 data 속성으로 보내주어야 api에서 @RequestBody parameter 받을 수 있음
           //구조분해할당 ... -> config 중, data 속성만 든 것을 컨트롤러로 전송
           //{headers: {'Content-Type': `application/json`}, data: {...deleteProductParam}} 로 body에 전송했으나, @PathValiable 통해서 data 전송하기로 수정. (01.16)
