@@ -122,7 +122,7 @@ public class CartServiceImpl implements CartService {
 
   @Transactional
   @Override
-  public Long deleteItemInCart(String email, CartItemDeleteInputDto parameter) {
+  public Long deleteItemInCart(String email, Long cartItemId) {
 
     //member data check
     Member member = getMember(email);
@@ -131,7 +131,7 @@ public class CartServiceImpl implements CartService {
     Cart cart = validateCartExistence(member);
 
     //cartItem data delete
-    return cartItemRepository.deleteByCartCartIdAndCartItemId(cart.getCartId(), parameter.getCartItemId());
+    return cartItemRepository.deleteByCartCartIdAndCartItemId(cart.getCartId(), cartItemId);
   }
 
   @Override

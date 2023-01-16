@@ -41,12 +41,15 @@ public class OrderServiceImpl implements OrderService {
         .orElseThrow(() -> new OrderException(OrderErrorCode.USER_EMAIL_NOT_EXIST));
 
     //2. to be orders_item -> check
-    //장바구니에서 진입했을 때 쓰는 메서드 -> 1) 해당 이용자 장바구니_상품 및 해당 상품 정보 select -> 2) 현재 상품 재고 및 상태 체크 -> 3) 주문_상품으로 변환하기 4) 주문에 주문 상품 set
-    //2-1. 현재 이용자의 장바구니 상품 및 해당 상품 정보 모두 가져오기(myBatis 쿼리)
+    // (1) 해당 이용자 장바구니_상품 및 해당 상품 정보 select -> (2) 현재 상품 재고 및 상태 체크 -> (3) 주문_상품으로 변환하기 4) 주문에 주문 상품 set
+    //2-1. 현재 이용자의 장바구니 상품 및 해당 상품 정보 모두 가져오기(myBatis 쿼리 직접 실행)
     List<CartItemDetailDto> cartItemDetailList = cartService.selectCartItemDetailList(email);
+    if (cartItemDetailList.isEmpty() || cartItemDetailList.size() == 0) {
+      throw new OrderException(OrderErrorCode.NOT_EXIST_CART_ITEM);
+    }
 
     List<OrdersItem> ordersItemList = new ArrayList<>(); //주문 객체 내에 들어갈 자식인 주문 상품 list
-    Orders orders = new Orders(); //해당 메서드 내에서 save할 주문 객체를 미리 생성... (빌터 패턴으로 통일하지 못함...)
+    Orders orders = new Orders(); //해당 메서드 내에서 save할 주문 객체를 미리 생성...
 
     for (CartItemDetailDto cartItem : cartItemDetailList) {
       //현재 장바구니 내 설정 수량이 재고 초과
@@ -69,7 +72,7 @@ public class OrderServiceImpl implements OrderService {
 
     //3. order set (item setting)
     orders = orders.createOrders(member,orders, ordersItemList); //수정함.. (빌더패턴으로 통일을 못했는데 통일 필요할 수도..)
-    ordersRepository.save(orders); //주문 key값 안 들어가서 도메인이 직접 객체들을 만들어서 반환하는 식으로 수정했음
+    ordersRepository.save(orders); //주문 key값 안 들어가서 도메인이 직접 객체들을 만들어서 반환하는 식으로 수정.
 
     //4. 장바구니 상품 삭제 (한꺼번에 장바구니 내 아이템을 모두 주문 들어갔기 때문에, 이용자의 장바구니 id를 key로 해서 한번에 장바구니 상품 삭제 처리)
     Cart cart = cartRepository.findById(cartItemDetailList.get(0).getCartId())

@@ -17,7 +17,7 @@ public class OrderController {
   private final CartService cartService;
   private final MemberService memberService;
 
-  @GetMapping("/from-cart")
+  @GetMapping("/cartItem")
   public String orderFromCart(Model model, Principal principal) {
 
     String email = principal.getName();

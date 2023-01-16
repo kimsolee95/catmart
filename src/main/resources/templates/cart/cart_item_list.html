@@ -47,18 +47,12 @@
         //수량 input value 변경 시, 상품 row 한개의 값 변경
         function changeProductQuantity(changeProductParam) {
 
-          let url = '/api/cart/update-quantity-req';
+          let url = '/api/cart/updateItemsQuantity';
 
           axios.put(url, changeProductParam).then(function(response) {
 
             response.data = response.data || {};
             response.data.responseResultHeader = response.data.responseResultHeader || {};
-
-            //fail (01.14 해당 컨트톨러 내에서의 잘못된 분기처리를 통한 응답값 내려주기를 수정하였으므로 이 라인을 주석 처리.)
-<!--            if (!response.data.responseResultHeader.result) {-->
-<!--              alert('내부 서버 오류로 인해 장바구니 상품 수량이 변경되지 않았습니다.');-->
-<!--              return false;-->
-<!--            }-->
 
             //success
             //전체 합계 금액 계산 call
@@ -120,13 +114,8 @@
           function(item) {
             item.querySelector('button[type=button]').addEventListener('click', function() {
 
-              let deleteProductParam = {
-                cartItemId: this.value
-              };
-
-              console.log('deleteparameter 확인');
-              console.log(deleteProductParam);
-              deleteProduct(deleteProductParam);
+              let cartItemId = this.value;
+              deleteProduct(cartItemId);
             })
           }
 
@@ -134,21 +123,16 @@
 
 
         //장바구니 상품 삭제 처리
-        function deleteProduct(deleteProductParam) {
+        function deleteProduct(cartItemId) {
 
-          let url = '/api/cart/delete-product-req';
+          let url = '/api/cart/deleteProduct/' + cartItemId;
           //delete -> config 내 data 속성으로 보내주어야 api에서 @RequestBody parameter 받을 수 있음
           //구조분해할당 ... -> config 중, data 속성만 든 것을 컨트롤러로 전송
-          axios.delete(url, {headers: {'Content-Type': `application/json`}, data: {...deleteProductParam}}).then(function(response) {
+          //{headers: {'Content-Type': `application/json`}, data: {...deleteProductParam}} 로 body에 전송했으나, @PathValiable 통해서 data 전송하기로 수정. (01.16)
+          axios.delete(url).then(function(response) {
 
             response.data = response.data || {};
             response.data.responseResultHeader = response.data.responseResultHeader || {};
-
-            //fail (01.14 해당 컨트톨러 내에서의 잘못된 분기처리를 통한 응답값 내려주기를 수정하였으므로 이 라인을 주석 처리.)
-<!--            if (!response.data.responseResultHeader.result) {-->
-<!--              alert('내부 서버 오류로 인해 장바구니 상품이 삭제되지 않았습니다.');-->
-<!--              return false;-->
-<!--            }-->
 
             //success
             //load page
@@ -170,7 +154,7 @@
 
         //구매하기 버튼 클릭 이벤트
         document.querySelector('#btn-purchase').addEventListener('click', function() {
-          location.href = '/order/from-cart';
+          location.href = '/order/cartItem';
         });
 
       }); //window.addEventListener
