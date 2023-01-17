@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shoptest.catmart.order.mapper.OrdersMapper">
+
+  <select id="selectOrdersHistoryList" resultType="com.shoptest.catmart.order.dto.OrdersHistoryDto">
+    SELECT
+      T1.ORDERS_ID
+      , COUNT(T1.ORDERS_ID) AS KINDS_COUNT
+      , T1.ORDERS_DATE
+      , T1.ORDERS_STATUS
+      , T1.MEMBER_ID
+      , SUM(T1.ORDER_PRICE) AS TOTAL_ORDER_PRICE
+      , CASE
+          WHEN SUM(T1.ORDER_PRICE) <![CDATA[ > ]]> 30000 THEN SUM(T1.ORDER_PRICE)
+          WHEN SUM(T1.ORDER_PRICE) <![CDATA[ <= ]]> 30000 THEN SUM(T1.ORDER_PRICE) + 3000
+        END AS SHIPPING_FEE_ADDED_PRICE
+      , T1.PRODUCT_ITEM_ID
+      , GROUP_CONCAT(T1.ORDERS_ITEM_ID) AS ORDERS_ITEM_ID_LIST
+      , SUM(T1.QUANTITY) AS SUN_QUANTITY
+      , CASE
+          WHEN COUNT(T1.ORDERS_ID) = 1 THEN T2.ITEM_NAME
+          WHEN COUNT(T1.ORDERS_ID) <![CDATA[ > ]]> 1 THEN CONCAT(T2.ITEM_NAME, ' 외 ', cast(COUNT(T1.ORDERS_ID) AS char), '건')
+        END AS ITEM_NAME_INFO
+      , T2.ITEM_STATUS
+      , T2.ITEM_SUBJECT
+      , T2.URL_IMG_PATH
+    FROM (
+      SELECT
+        A.ORDERS_ID
+        , A.ORDERS_DATE
+        , A.ORDERS_STATUS
+        , A.MEMBER_ID
+        , B.ORDER_PRICE
+        , B.PRODUCT_ITEM_ID
+        , B.ORDERS_ITEM_ID
+        , B.QUANTITY
+      FROM ORDERS A
+      INNER JOIN ORDERS_ITEM B
+      ON A.ORDERS_ID = B.ORDERS_ID
+      AND A.MEMBER_ID = #{memberId}
+    ) T1
+    INNER JOIN (
+      SELECT
+        C.PRODUCT_ITEM_ID
+        , C.ITEM_NAME
+        , C.ITEM_STATUS
+        , C.ITEM_SUBJECT
+        , D.URL_IMG_PATH
+      FROM PRODUCT_ITEM C
+      INNER JOIN ITEM_IMG D
+      ON C.PRODUCT_ITEM_ID = D.PRODUCT_ITEM_ID
+    ) T2
+    ON T1.PRODUCT_ITEM_ID = T2.PRODUCT_ITEM_ID
+    GROUP BY T1.ORDERS_ID
+    ORDER BY T1.ORDERS_DATE DESC
+  </select>
+
+  <select id="selectOrdersHistoryDetailList" resultType="com.shoptest.catmart.order.dto.OrdersHistoryDetailDto">
+    SELECT
+      T1.ORDERS_ID
+      , T1.ORDERS_DATE
+      , T1.ORDERS_STATUS
+      , T1.MEMBER_ID
+      , T1.ORDER_PRICE
+      , T1.PRODUCT_ITEM_ID
+      , T1.ORDERS_ITEM_ID
+      , T1.QUANTITY
+      , T2.ITEM_NAME
+      , T2.ITEM_STATUS
+      , T2.ITEM_SUBJECT
+      , T2.URL_IMG_PATH
+    FROM
+    (
+      SELECT
+        A.ORDERS_ID
+        , A.ORDERS_DATE
+        , A.ORDERS_STATUS
+        , A.MEMBER_ID
+        , B.ORDER_PRICE
+        , B.PRODUCT_ITEM_ID
+        , B.ORDERS_ITEM_ID
+        , B.QUANTITY
+      FROM ORDERS A
+      INNER JOIN ORDERS_ITEM B
+      ON A.ORDERS_ID = B.ORDERS_ID
+      AND A.MEMBER_ID = #{memberId}
+      AND A.ORDERS_ID = #{ordersId}
+    ) T1
+    INNER JOIN (
+      SELECT
+        C.PRODUCT_ITEM_ID
+        , C.ITEM_NAME
+        , C.ITEM_STATUS
+        , C.ITEM_SUBJECT
+        , D.URL_IMG_PATH
+      FROM PRODUCT_ITEM C
+      INNER JOIN ITEM_IMG D
+      ON C.PRODUCT_ITEM_ID = D.PRODUCT_ITEM_ID
+    ) T2
+    ON T1.PRODUCT_ITEM_ID = T2.PRODUCT_ITEM_ID
+  </select>
+
+</mapper>

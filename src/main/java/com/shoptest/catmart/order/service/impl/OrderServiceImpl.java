@@ -10,8 +10,12 @@ import com.shoptest.catmart.member.domain.Member;
 import com.shoptest.catmart.member.repository.MemberRepository;
 import com.shoptest.catmart.order.domain.Orders;
 import com.shoptest.catmart.order.domain.OrdersItem;
+import com.shoptest.catmart.order.dto.OrdersHistoryDetailDto;
+import com.shoptest.catmart.order.dto.OrdersHistoryDto;
+import com.shoptest.catmart.order.mapper.OrdersMapper;
 import com.shoptest.catmart.order.repository.OrdersRepository;
 import com.shoptest.catmart.order.service.OrderService;
+import com.shoptest.catmart.order.type.OrderStatus;
 import com.shoptest.catmart.product.domain.ProductItem;
 import com.shoptest.catmart.product.repository.ProductItemRepository;
 import com.shoptest.catmart.product.type.ItemStatus;
@@ -30,6 +34,7 @@ public class OrderServiceImpl implements OrderService {
   private final CartService cartService;
   private final CartRepository cartRepository;
   private final OrdersRepository ordersRepository;
+  private final OrdersMapper ordersMapper;
 
 
   @Transactional
@@ -37,8 +42,7 @@ public class OrderServiceImpl implements OrderService {
   public void createOrder(String email) {
 
     //1. member check
-    Member member = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new OrderException(OrderErrorCode.USER_EMAIL_NOT_EXIST));
+    Member member = getMember(email);
 
     //2. to be orders_item -> check
     // (1) 해당 이용자 장바구니_상품 및 해당 상품 정보 select -> (2) 현재 상품 재고 및 상태 체크 -> (3) 주문_상품으로 변환하기 4) 주문에 주문 상품 set
@@ -80,5 +84,42 @@ public class OrderServiceImpl implements OrderService {
     cartService.deleteAllCartItem(cart.getCartId());
   }
 
+  @Override
+  public List<OrdersHistoryDto> selectOrdersHistoryList(String email) {
+
+    Member member = getMember(email);
+    return ordersMapper.selectOrdersHistoryList(member.getMemberId());
+  }
+
+  @Override
+  public List<OrdersHistoryDetailDto> selectOrdersHistoryDetailList(String email, Long ordersId) {
+
+    Member member = getMember(email);
+    return ordersMapper.selectOrdersHistoryDetailList(member.getMemberId(), ordersId);
+  }
+
+  @Override
+  public void cancelOrder(String email, Long ordersId) {
+
+    Member member = getMember(email);
+    Orders orders = ordersRepository.findById(ordersId)
+        .orElseThrow(() -> new OrderException(OrderErrorCode.NOT_EXIST_ORDER));
+
+    //주문상태가 주문 접수인 경우에만 주문 취소하도록 한다.
+    if (!OrderStatus.TAKE_ORDER.equals(orders.getOrdersStatus())) {
+      throw new OrderException(OrderErrorCode.NOT_POSSIBLE_CANCEL);
+    }
+
+    //jpa에서 select해서(member table과 outer join) 비교하기 때문에 취소상태인 것에 대한 재 취소 요청은 update 쿼리는 생성되지 않는다
+    orders = orders.cancelOrders(orders); //?? 확인 필요..
+    ordersRepository.save(orders);
+  }
+
+  private Member getMember(String email) {
+
+    Member member = memberRepository.findByEmail(email)
+        .orElseThrow(() -> new OrderException(OrderErrorCode.USER_EMAIL_NOT_EXIST));
+    return member;
+  }
 
 }
