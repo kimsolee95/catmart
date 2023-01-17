@@ -91,5 +91,11 @@ public class Orders {
     return orders;
   }
 
+  /* 주문 취소하기 */
+  public Orders cancelOrders(Orders orders) {
+    orders.setOrdersStatus(OrderStatus.CANCEL_ORDER);
+    return orders;
+  }
+
 
 }

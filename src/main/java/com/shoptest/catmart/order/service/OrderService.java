@@ -15,4 +15,7 @@ public interface OrderService {
   /* 고객 - 주문하기 목록 내 주문 단건 상세 조회 */
   List<OrdersHistoryDetailDto> selectOrdersHistoryDetailList(String email, Long ordersId);
 
+  /* 고객 - 주문하기 목록 내 주문 취소하기(상태 변경) */
+  void cancelOrder(String email, Long ordersId);
+
 }
