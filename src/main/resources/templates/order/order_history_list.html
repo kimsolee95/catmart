@@ -141,8 +141,10 @@
             </td>
             <td class="col-2 delete-btn">
               <!-- btns -->
-              <button type="button" th:value="${ordersHistory.ordersId}" class="btn btn-outline-info btn-block">주문 상세</button>
-              <button type="button" th:value="${ordersHistory.ordersId}" class="btn btn-outline-info btn-block">주문 취소</button>
+              <a th:href="@{/order/history/detail/{ordersId}(ordersId = ${ordersHistory.ordersId})}" class="btn btn-outline-info btn-block">주문 상세</a>
+              <button type="button" th:value="${ordersHistory.ordersId}" class="btn btn-outline-info btn-block">
+                주문 취소
+              </button>
             </td>
           </tr>
         </tbody>

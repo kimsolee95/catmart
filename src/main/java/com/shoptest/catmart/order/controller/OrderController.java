@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -36,6 +37,16 @@ public class OrderController {
     model.addAttribute("ordersHistoryList", orderService.selectOrdersHistoryList(email));
 
     return "/order/order_history_list";
+  }
+
+  @GetMapping("/history/detail/{ordersId}")
+  public String odderHistoryDetail(Model model, Principal principal, @PathVariable Long ordersId) {
+
+    String email = principal.getName();
+    model.addAttribute("shippingAddress", memberService.selectMemberAddress(email)); //배송지 (원래는 배송 관련 내용만 따로 담은 table 필요..)
+    model.addAttribute("ordersHistoryDetailList", orderService.selectOrdersHistoryDetailList(email, ordersId)); //주문 내 상세 주문정보 list
+
+    return "/order/order_history_detail";
   }
 
 }

@@ -10,6 +10,7 @@ import com.shoptest.catmart.member.domain.Member;
 import com.shoptest.catmart.member.repository.MemberRepository;
 import com.shoptest.catmart.order.domain.Orders;
 import com.shoptest.catmart.order.domain.OrdersItem;
+import com.shoptest.catmart.order.dto.OrdersHistoryDetailDto;
 import com.shoptest.catmart.order.dto.OrdersHistoryDto;
 import com.shoptest.catmart.order.mapper.OrdersMapper;
 import com.shoptest.catmart.order.repository.OrdersRepository;
@@ -40,8 +41,7 @@ public class OrderServiceImpl implements OrderService {
   public void createOrder(String email) {
 
     //1. member check
-    Member member = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new OrderException(OrderErrorCode.USER_EMAIL_NOT_EXIST));
+    Member member = getMember(email);
 
     //2. to be orders_item -> check
     // (1) 해당 이용자 장바구니_상품 및 해당 상품 정보 select -> (2) 현재 상품 재고 및 상태 체크 -> (3) 주문_상품으로 변환하기 4) 주문에 주문 상품 set
@@ -86,10 +86,22 @@ public class OrderServiceImpl implements OrderService {
   @Override
   public List<OrdersHistoryDto> selectOrdersHistoryList(String email) {
 
-    Member member = memberRepository.findByEmail(email)
-        .orElseThrow(() -> new OrderException(OrderErrorCode.USER_EMAIL_NOT_EXIST));
+    Member member = getMember(email);
     return ordersMapper.selectOrdersHistoryList(member.getMemberId());
   }
 
+  @Override
+  public List<OrdersHistoryDetailDto> selectOrdersHistoryDetailList(String email, Long ordersId) {
+
+    Member member = getMember(email);
+    return ordersMapper.selectOrdersHistoryDetailList(member.getMemberId(), ordersId);
+  }
+
+  private Member getMember(String email) {
+
+    Member member = memberRepository.findByEmail(email)
+        .orElseThrow(() -> new OrderException(OrderErrorCode.USER_EMAIL_NOT_EXIST));
+    return member;
+  }
 
 }
