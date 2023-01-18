@@ -4,6 +4,7 @@ import com.shoptest.catmart.cart.dto.CartItemDetailDto;
 import com.shoptest.catmart.common.exception.OrderException;
 import com.shoptest.catmart.common.exception.type.OrderErrorCode;
 import com.shoptest.catmart.member.domain.Member;
+import com.shoptest.catmart.order.dto.OrderItemAddInputDto;
 import com.shoptest.catmart.order.type.OrderStatus;
 import com.shoptest.catmart.product.domain.ProductItem;
 import java.time.LocalDateTime;
@@ -67,7 +68,7 @@ public class Orders {
   /* 수정일자 */
   private LocalDateTime modifiedAt;
 
-  /* 주문_상품 생성하기 */
+  /* 주문_상품 생성하기 - 장바구니에서 접근 */
   public OrdersItem createOrdersItem(ProductItem productItem, CartItemDetailDto toBeOrderItems) {
 
     OrdersItem ordersItem = OrdersItem.builder()
@@ -75,6 +76,19 @@ public class Orders {
         .quantity(toBeOrderItems.getQuantity())
         .productItem(productItem)
         .orderPrice(productItem.getPrice() * toBeOrderItems.getQuantity())
+        .createdAt(LocalDateTime.now())
+        .build();
+    return ordersItem;
+  }
+
+  /* 주문_상품 생성하기 - 단일 상품 바로 주문하기에서 접근 */
+  public OrdersItem createOrdersItem(ProductItem productItem, OrderItemAddInputDto orderItemAddInputDto) {
+
+    OrdersItem ordersItem = OrdersItem.builder()
+        .orders(this)
+        .quantity(orderItemAddInputDto.getQuantity())
+        .productItem(productItem)
+        .orderPrice(productItem.getPrice() * orderItemAddInputDto.getQuantity())
         .createdAt(LocalDateTime.now())
         .build();
     return ordersItem;

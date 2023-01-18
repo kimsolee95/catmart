@@ -25,6 +25,7 @@
         quantityInput.oninput = calculatePayment;
 
         const cartAddBtn = document.getElementById('cartAddBtn');
+        const orderNowBtn = document.getElementById('orderNowBtn');
 
         //수량에 따른 결제 금액 계산
         function calculatePayment() {
@@ -45,6 +46,7 @@
             return false;
           }
 
+          //login 여부 check
           if (!isLoginUser()) {
             return false;
           }
@@ -76,6 +78,48 @@
             console.log(error);
           });
 
+
+        });
+
+        //단일 상품 주문하기 버튼 클릭
+        orderNowBtn.addEventListener('click', function() {
+
+          const orderNowMsg = '이 상품만 바로 주문하시겠습니까?';
+          if (!confirm(orderNowMsg)) {
+            return false;
+          }
+
+          //login 여부 check
+          if (!isLoginUser()) {
+            return false;
+          }
+
+          let url = '/api/order/singleProduct';
+          let quantity = quantityInput.value;
+
+          let parameter = {
+            productItemId: productItemId
+            , quantity: quantity
+          };
+
+          axios.post(url, parameter).then(function(response) {
+
+            response.data = response.data || {};
+            response.data.responseResultHeader = response.data.responseResultHeader || {};
+
+            //success
+            alert('해당 상품을 주문하였습니다.');
+
+          }).catch(function(error) {
+
+            if (error.response) {
+              //요청 후, 서버가 2xx 범위 벗어나는 상태 코드를 주었다.(장바구니 익셉션 핸들러 코드 400.)
+              console.log(error.response.data);
+              alert(error.response.data.errorMessage);
+            }
+
+            console.log(error);
+          });
 
         });
 

@@ -58,5 +58,17 @@ public class ProductItem {
   
   /* 수정일자 */
   private LocalDateTime modifiedAt;
+
+  /* 주문 시, 주문수량만큼 상품 재고 차감하기 */
+  public ProductItem deductionStock(ProductItem productItem, int quantity) {
+
+    int newStock = productItem.getStock() - quantity;
+    if (newStock <= 0) {
+      productItem.setItemStatus(ItemStatus.OUT_OF_STOCK);
+    }
+
+    productItem.setStock(newStock);
+    return productItem;
+  }
   
 }

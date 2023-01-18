@@ -10,6 +10,7 @@ import com.shoptest.catmart.member.domain.Member;
 import com.shoptest.catmart.member.repository.MemberRepository;
 import com.shoptest.catmart.order.domain.Orders;
 import com.shoptest.catmart.order.domain.OrdersItem;
+import com.shoptest.catmart.order.dto.OrderItemAddInputDto;
 import com.shoptest.catmart.order.dto.OrdersHistoryDetailDto;
 import com.shoptest.catmart.order.dto.OrdersHistoryDto;
 import com.shoptest.catmart.order.mapper.OrdersMapper;
@@ -36,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
   private final OrdersRepository ordersRepository;
   private final OrdersMapper ordersMapper;
 
-
+  /* 고객 - 주문하기(장바구니 - 장바구니 내 모든 상픔 주문) */
   @Transactional
   @Override
   public void createOrder(String email) {
@@ -72,16 +73,57 @@ public class OrderServiceImpl implements OrderService {
       //부모인 주문 도메인이 직접 주문 상품 생성해서 반환하도록 변경 (이 메서드 내에서 생성 완료될 주문 객체가 주문 자식 내에도 있어야 해서 직접 주문 엔티티 내에서 this로 주문자식 객체에 본인을 setting하기로 함)
       OrdersItem ordersItem = orders.createOrdersItem(productItem, cartItem);
       ordersItemList.add(ordersItem);
+
+      //해당 상품의 재고를 장바구니 내 상품 수량만큼 차감
+      productItem.deductionStock(productItem, cartItem.getQuantity());
+      productItemRepository.save(productItem);
     }
 
     //3. order set (item setting)
-    orders = orders.createOrders(member,orders, ordersItemList); //수정함.. (빌더패턴으로 통일을 못했는데 통일 필요할 수도..)
+    orders = orders.createOrders(member, orders, ordersItemList); //수정함.. (빌더패턴으로 통일을 못했는데 통일 필요할 수도..)
     ordersRepository.save(orders); //주문 key값 안 들어가서 도메인이 직접 객체들을 만들어서 반환하는 식으로 수정.
 
     //4. 장바구니 상품 삭제 (한꺼번에 장바구니 내 아이템을 모두 주문 들어갔기 때문에, 이용자의 장바구니 id를 key로 해서 한번에 장바구니 상품 삭제 처리)
     Cart cart = cartRepository.findById(cartItemDetailList.get(0).getCartId())
             .orElseThrow(() -> new OrderException(OrderErrorCode.OVER_QUANTITY));
     cartService.deleteAllCartItem(cart.getCartId());
+  }
+
+  /* 고객 - 주문하기 (상품 상세 페이지 - 단일 상품 주문) */
+  @Transactional
+  @Override
+  public void createOrder(OrderItemAddInputDto orderItemAddInputDto, String email) {
+
+    //1. member check
+    Member member = getMember(email);
+
+    //2. productItem check
+    ProductItem productItem = productItemRepository.findById(orderItemAddInputDto.getProductItemId())
+        .orElseThrow(() -> new OrderException(OrderErrorCode.NOT_EXIST_PRODUCT_ITEM));
+    //재고량 체크
+    if (productItem.getStock() < orderItemAddInputDto.getQuantity()) {
+      throw new OrderException(OrderErrorCode.OVER_QUANTITY);
+    }
+    //상품 상태(판매 or 품절) 체크
+    if (ItemStatus.OUT_OF_STOCK.equals(productItem.getItemStatus())) {
+      throw new OrderException(OrderErrorCode.OUT_OF_STOCK);
+    }
+    //상품 주문량만큼 재고수 차감
+    productItem.deductionStock(productItem, orderItemAddInputDto.getQuantity());
+
+    //3. orders_item create
+    List<OrdersItem> ordersItemList = new ArrayList<>(); //주문 객체 내에 들어갈 자식인 주문 상품 list
+    Orders orders = new Orders(); //해당 메서드 내에서 save할 주문 객체를 미리 생성...
+
+    OrdersItem ordersItem = orders.createOrdersItem(productItem, orderItemAddInputDto);
+    ordersItemList.add(ordersItem);
+
+    //4. order create
+    orders.createOrders(member, orders, ordersItemList);
+
+    //5. save data
+    productItemRepository.save(productItem);
+    ordersRepository.save(orders);
   }
 
   @Override
@@ -98,6 +140,7 @@ public class OrderServiceImpl implements OrderService {
     return ordersMapper.selectOrdersHistoryDetailList(member.getMemberId(), ordersId);
   }
 
+  @Transactional
   @Override
   public void cancelOrder(String email, Long ordersId) {
 
