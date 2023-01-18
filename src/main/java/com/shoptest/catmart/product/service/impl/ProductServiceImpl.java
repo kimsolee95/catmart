@@ -1,5 +1,9 @@
 package com.shoptest.catmart.product.service.impl;
 
+import com.shoptest.catmart.common.exception.OrderException;
+import com.shoptest.catmart.common.exception.type.OrderErrorCode;
+import com.shoptest.catmart.order.dto.OrderItemAddInputDto;
+import com.shoptest.catmart.order.dto.OrderItemByProductDto;
 import com.shoptest.catmart.product.domain.ProductItem;
 import com.shoptest.catmart.product.dto.AdminProductMngDetailDto;
 import com.shoptest.catmart.product.dto.AdminProductMngDto;
@@ -68,4 +72,13 @@ public class ProductServiceImpl implements ProductService {
   public FrontProductDetailDto selectFrontProductDetail(Long productItemId) {
     return productMapper.frontProductDetail(productItemId);
   }
+
+  @Override
+  public OrderItemByProductDto selectOrderItemDetailByProduct(OrderItemAddInputDto orderItemAddInputDto) {
+
+    OrderItemByProductDto orderItemByProductDto = productMapper.orderItemByProductDetail(orderItemAddInputDto);
+    orderItemByProductDto.setQuantity(orderItemAddInputDto.getQuantity()); //주문 희망 수량으로 재세팅
+    return orderItemByProductDto;
+  }
+
 }

@@ -23,6 +23,7 @@ import com.shoptest.catmart.product.type.ItemStatus;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -155,6 +156,20 @@ public class OrderServiceImpl implements OrderService {
 
     //jpa에서 select해서(member table과 outer join) 비교하기 때문에 취소상태인 것에 대한 재 취소 요청은 update 쿼리는 생성되지 않는다
     orders = orders.cancelOrders(orders); //?? 확인 필요..
+
+    //주문 시 상품 재고 차감이 이뤄지기 때문에, 주문취소한다면 주문상품의 주문수량만큼 다시 상품 재고에 더한다.
+    List<OrdersItem> cancelOrdersItemList = orders.getOrdersItemList();
+    for (OrdersItem item : cancelOrdersItemList) {
+
+      int itemQuantity = item.getQuantity(); //주문 상품 수량
+      //상품 수량에 주문 상품 수량 다시 더하기
+      ProductItem productItem = new ProductItem();
+      productItem = productItem.addStock(item.getProductItem(), itemQuantity);
+      //더한 상품값 반영한 상품 객체를 주문상품에 set
+      item.setProductItem(productItem);
+    }
+
+    orders.setOrdersItemList(cancelOrdersItemList);
     ordersRepository.save(orders);
   }
 
