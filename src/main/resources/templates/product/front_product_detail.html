@@ -45,6 +45,10 @@
             return false;
           }
 
+          if (!isLoginUser()) {
+            return false;
+          }
+
           let url = '/api/cart/cartItem';
           let quantity = quantityInput.value;
 
@@ -78,6 +82,28 @@
 
 
       }); //window.addEventListener
+
+
+      function isLoginUser() {
+
+        let email = document.querySelector('#user-email').value;
+        if (isValueEmpty(email)) {
+          alert('서비스 이용을 위해 로그인해주세요.');
+          return false;
+        }
+        return true;
+      }
+
+      function isValueEmpty(value) {
+
+        if( value == "" || value == null || value == undefined || ( value != null && typeof value == "object" && !Object.keys(value).length ) ){
+
+          return true;
+        } else {
+
+          return false;
+        }
+      };
 
     </script>
   </th:block>
@@ -174,6 +200,7 @@
               <hr/>
               <p class="card-text">
                 <button class="btn btn-light btn-lg btn-block" id="cartAddBtn" type="submit">장바구니 담기</button>
+                <input type="hidden" th:value="${email}" id="user-email">
               </p>
               <p class="card-text">
                 <button class="btn btn-primary btn-lg btn-block" id="orderNowBtn" type="submit">바로 주문하기</button>

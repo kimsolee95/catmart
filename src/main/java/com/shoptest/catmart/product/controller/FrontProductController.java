@@ -5,6 +5,7 @@ import com.shoptest.catmart.admin.service.CategoryService;
 import com.shoptest.catmart.product.dto.FrontProductDetailDto;
 import com.shoptest.catmart.product.dto.FrontProductDto;
 import com.shoptest.catmart.product.service.ProductService;
+import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,7 +37,12 @@ public class FrontProductController {
   }
 
   @GetMapping("/detail/{productItemId}")
-  public String frontProductDetail(Model model, @PathVariable("productItemId") Long productItemId) {
+  public String frontProductDetail(Model model, @PathVariable("productItemId") Long productItemId, Principal principal) {
+
+    String email = null;
+    if (principal != null) {
+      email = principal.getName();
+    }
 
     FrontProductDetailDto detail = new FrontProductDetailDto();
     if (productItemId != null) {
@@ -44,6 +50,7 @@ public class FrontProductController {
     }
 
     model.addAttribute("detail", detail);
+    model.addAttribute("email", email);
     return "/product/front_product_detail";
   }
 

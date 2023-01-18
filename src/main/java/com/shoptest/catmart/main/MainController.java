@@ -22,6 +22,14 @@ public class MainController {
   }
 
 
+  @RequestMapping("/")
+  public String beforLoginIndex(Model model) {
+
+    model.addAttribute("frontCategoryList", categoryService.selectFrontCategoryList());
+    return "index";
+  }
+
+
 
 
 }
