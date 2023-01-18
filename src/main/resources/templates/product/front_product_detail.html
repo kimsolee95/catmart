@@ -25,6 +25,7 @@
         quantityInput.oninput = calculatePayment;
 
         const cartAddBtn = document.getElementById('cartAddBtn');
+        const orderNowBtn = document.getElementById('orderNowBtn');
 
         //수량에 따른 결제 금액 계산
         function calculatePayment() {
@@ -42,6 +43,11 @@
           const cartAddMsg = '장바구니에 해당 상품을 담겠습니까?';
 
           if (!confirm(cartAddMsg)) {
+            return false;
+          }
+
+          //login 여부 check
+          if (!isLoginUser()) {
             return false;
           }
 
@@ -75,9 +81,49 @@
 
         });
 
+        //단일 상품 주문하기 버튼 클릭
+        orderNowBtn.addEventListener('click', function() {
+
+          const orderNowMsg = '이 상품만 바로 주문하시겠습니까?';
+          if (!confirm(orderNowMsg)) {
+            return false;
+          }
+
+          //login 여부 check
+          if (!isLoginUser()) {
+            return false;
+          }
+
+          let quantity = quantityInput.value;
+          window.location.href = "/order/product?productItemId=" + productItemId + "&quantity=" + quantity; //주문하기 폼(단일 상품 주문 시의 페이지)으로 이동
+
+        });
+
 
 
       }); //window.addEventListener
+
+
+      function isLoginUser() {
+
+        let email = document.querySelector('#user-email').value;
+        if (isValueEmpty(email)) {
+          alert('서비스 이용을 위해 로그인해주세요.');
+          return false;
+        }
+        return true;
+      }
+
+      function isValueEmpty(value) {
+
+        if( value == "" || value == null || value == undefined || ( value != null && typeof value == "object" && !Object.keys(value).length ) ){
+
+          return true;
+        } else {
+
+          return false;
+        }
+      }
 
     </script>
   </th:block>
@@ -174,6 +220,7 @@
               <hr/>
               <p class="card-text">
                 <button class="btn btn-light btn-lg btn-block" id="cartAddBtn" type="submit">장바구니 담기</button>
+                <input type="hidden" th:value="${email}" id="user-email">
               </p>
               <p class="card-text">
                 <button class="btn btn-primary btn-lg btn-block" id="orderNowBtn" type="submit">바로 주문하기</button>

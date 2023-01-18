@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <!-- axios cdn -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+      window.addEventListener('DOMContentLoaded', function() {
+
+        //금액 setting
+        init();
+
+        //결제하기 버튼 클릭 이벤트
+        document.querySelector('#btn-order').addEventListener('click', function() {
+          //주문 생성 api call
+          callOrderCreateApi();
+        });
+
+
+      }); //window.addEventListener
+
+      //화면 로딩 시, 필요한 금액 정보 setting
+      async function init() {
+
+        let totalPrice = await calculateEachProduct(); //1. 총 금액 계산하기
+        await markTotalPrice(totalPrice); //2. 계산한 총 금액 바탕으로 배송비 더한 값 ui 출력
+      }
+
+      //각 상품마다의 개수 * 금액 계산
+      function calculateEachProduct() {
+
+        return new Promise(function(resolve, reject) {
+
+          let totalPrice = 0; //총 결제금액
+
+          document.querySelectorAll('.quantity').forEach(
+
+            function(item) {
+
+              let quantity = item.querySelector('span').innerHTML; //수량
+              let eachPrice = item.parentNode.nextElementSibling.querySelector('input[type=hidden]').value; //각각 1개 가격
+              let productPrice = quantity * eachPrice; //각 상품의 수량 곱한 가격
+
+              item.parentNode.nextElementSibling.querySelector('span').innerHTML = productPrice + '원';
+              totalPrice += productPrice;
+            }
+          );
+
+          resolve(totalPrice);
+        });
+
+      }
+
+      //각 상품의 금액 합한 총 주문 금액 계산
+      function markTotalPrice(totalPrice) {
+
+        return new Promise(function(resolve, reject) {
+
+          //배송비
+          let shippingFee = (totalPrice > 30000) ? 0 : 3000;
+
+          //최종 상품 금액 표시
+          document.querySelector('#total-product-price').innerHTML = totalPrice + '원';
+          document.querySelector('#shipping-fee').innerHTML = shippingFee;
+          document.querySelector('#total-payment').innerHTML = totalPrice + shippingFee;
+
+          resolve();
+        });
+      }
+
+      //주문 생성 api 호출
+      function callOrderCreateApi() {
+
+        //login 여부 check
+        if (!isLoginUser()) {
+          return false;
+        }
+
+        let url = '/api/order/singleProduct';
+        let quantity = document.querySelector('#quantity').value;
+        let productItemId = document.querySelector('#productItemId').value;
+
+        let parameter = {
+          productItemId: productItemId
+          , quantity: quantity
+        };
+
+        axios.post(url, parameter).then(function(response) {
+
+          response.data = response.data || {};
+          response.data.responseResultHeader = response.data.responseResultHeader || {};
+
+          //success
+          alert('해당 상품을 주문하였습니다.');
+
+        }).catch(function(error) {
+
+          if (error.response) {
+            //요청 후, 서버가 2xx 범위 벗어나는 상태 코드를 주었다.( 익셉션 핸들러 코드 400.)
+            console.log(error.response.data);
+            alert(error.response.data.errorMessage);
+          }
+
+          console.log(error);
+        });
+
+      }
+
+      function isLoginUser() {
+
+        let email = document.querySelector('#user-email').value;
+        if (isValueEmpty(email)) {
+          alert('서비스 이용을 위해 로그인해주세요.');
+          return false;
+        }
+        return true;
+      }
+
+      function isValueEmpty(value) {
+
+        if( value == "" || value == null || value == undefined || ( value != null && typeof value == "object" && !Object.keys(value).length ) ){
+
+          return true;
+        } else {
+
+          return false;
+        }
+      }
+
+    </script>
+  </th:block>
+
+  <th:block layout:fragment="css">
+    <style>
+
+      html {
+        position: relative;
+        min-height: 100%;
+        margin: 0;
+      }
+
+      body {
+        min-height: 100%;
+      }
+
+      .footer {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        padding: 15px 0;
+        text-align: center;
+      }
+
+      .header {
+        margin-bottom: 20px;
+
+      }
+
+      .content {
+        margin-bottom: 100px;
+        margin-top: 50px;
+        margin-left: 150px;
+        margin-right: 150px;
+      }
+
+      #sum-info-tab {
+        margin-top: 18px;
+      }
+
+      .order-info {
+        margin-bottom: 13px;
+      }
+
+
+    </style>
+  </th:block>
+
+</head>
+<body>
+
+  <div th:replace="fragments/header::header"></div>
+
+  <div class="content">
+
+    <!-- category info bar -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">
+          장바구니 > <span class="badge badge-primary">주문결제</span> > 결제완료
+        </li>
+      </ol>
+    </nav>
+
+    <!-- product detail area -->
+    <div class="container"> <!-- container-md-->
+
+      <!-- shipping-info -->
+      <table class="table table-borderless" style="margin-bottom: 20px;">
+        <thead>
+        <tr>
+          <th colspan="3">
+            <span class="btn btn-primary">배송정보</span>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>받는 사람</th>
+            <td th:text="${shippingAddress.name}"></td>
+          </tr>
+          <tr>
+            <th>휴대전화</th>
+            <td th:text="${shippingAddress.phoneNumber}"></td>
+          </tr>
+          <tr>
+            <th>배송주소</th>
+            <td>
+              <span th:text="${shippingAddress.address}"></span> <span th:text="${shippingAddress.addressDetail}"></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 주문예정상품 - 장바구니 목록 -> 주문결제 page -->
+      <table class="table table-borderless order-info" id="cart-item-list" style="margin-bottom: 20px;"> <!-- container-md -->
+        <thead class="thead-light">
+          <tr>
+            <th colspan="3">
+              주문상품
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="cart-item">
+            <td class="col-7">
+              <!-- img -->
+              <div class="border-0 card mb-3" style="max-width: 300px;">
+                <div class="row no-gutters">
+                  <div class="col-md-4">
+                    <img th:src="${toBeOrderItem.urlImgPath}" class="card-img" alt="...">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 th:text="${toBeOrderItem.itemName}" class="card-title"></h5>
+                      <p class="card-text">
+                        <small class="text-muted"><span th:text="${toBeOrderItem.itemStatus}" class="badge badge-pill badge-success"></span></small>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="col-2">
+              <!-- quantity  -->
+              <div class="form-group quantity">
+                <h5>
+                  수량 <span th:text="${toBeOrderItem.quantity}"></span> 개
+                </h5>
+                <input type="hidden" th:value="${toBeOrderItem.productItemId}" id="productItemId" /> <!-- 상품 Key value -->
+                <input type="hidden" th:value="${toBeOrderItem.quantity}" id="quantity" />
+                <input type="hidden" th:value="${email}" id="user-email" />
+              </div>
+            </td>
+            <td class="col-3">
+              <!-- price -->
+              <div>
+                <h2 class="price">
+                  <span th:text="${toBeOrderItem.price}" class="badge badge-pill badge-light"></span>
+                  <input type="hidden" th:value="${toBeOrderItem.price}">
+                </h2>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- amount of payment -->
+      <table class="table table-borderless order-info" style="margin-bottom: 20px;">
+        <thead class="thead-light">
+        <tr>
+          <th colspan="3">
+            최종 결제금액
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th>총 상품 금액</th>
+          <td id="total-product-price"></td>
+        </tr>
+        <tr>
+          <th>배송비</th>
+          <td>+<span id="shipping-fee"></span>원</td>
+        </tr>
+        <tr>
+          <th>총 결제금액</th>
+          <td><h3><span class="badge badge-pill badge-warning" id="total-payment"></span>원</h3></td>
+        </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+
+    <!-- 구매하기 영역 -->
+    <hr/>
+    <div class="d-flex justify-content-center" id="sum-info-tab">
+      <div class="container-md">
+        <div class="d-flex justify-content-center row alert alert-light">
+          <span>위 주문 내용을 확인하였으며 결제하겠습니다.</span>
+        </div>
+        <div class="row">
+          <button type="button" class="btn btn-info btn-block" id="btn-order">결제하기</button>
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+
+  <div th:replace="fragments/footer::footer"></div>
+
+</body>
+</html>

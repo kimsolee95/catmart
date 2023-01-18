@@ -58,5 +58,29 @@ public class ProductItem {
   
   /* 수정일자 */
   private LocalDateTime modifiedAt;
-  
+
+  /* 주문 시, 주문수량만큼 상품 재고 차감하기 */
+  public ProductItem deductionStock(ProductItem productItem, int quantity) {
+
+    int newStock = productItem.getStock() - quantity;
+    if (newStock <= 0) {
+      productItem.setItemStatus(ItemStatus.OUT_OF_STOCK);
+    }
+
+    productItem.setStock(newStock);
+    return productItem;
+  }
+
+  /* 주문 취소 시, 주문했던 수량만큼 상품 재고 더하기 */
+  public ProductItem addStock(ProductItem productItem, int quantity) {
+
+    int newStock = productItem.getStock() + quantity;
+    if (newStock > 0) {
+      productItem.setItemStatus(ItemStatus.SAIL);
+    }
+
+    productItem.setStock(newStock);
+    return productItem;
+  }
+
 }

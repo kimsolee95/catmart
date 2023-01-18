@@ -72,4 +72,19 @@
     AND A.PRODUCT_ITEM_ID = #{productItemId}
   </select>
 
+  <select id="orderItemByProductDetail" resultType="com.shoptest.catmart.order.dto.OrderItemByProductDto">
+    SELECT
+      A.PRODUCT_ITEM_ID
+      , A.ITEM_NAME
+      , A.PRICE
+      , A.ITEM_STATUS
+      , A.STOCK
+      , A.POST_YN
+      , B.URL_IMG_PATH
+    FROM PRODUCT_ITEM A
+    INNER JOIN ITEM_IMG B
+    ON A.PRODUCT_ITEM_ID = B.PRODUCT_ITEM_ID
+    AND A.PRODUCT_ITEM_ID = #{productItemId}
+  </select>
+
 </mapper>

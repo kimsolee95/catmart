@@ -29,9 +29,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Override
   public void configure(WebSecurity web) throws Exception {
-    //로그인 후, static 리소스 파일을 필터링에서 제외하기
-    web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-    
+
+    web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations()); ////로그인 후, static 리소스 파일을 필터링에서 제외하기
     super.configure(web);
   }
 
@@ -41,8 +40,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     http.csrf().disable();
 
     http.authorizeRequests().antMatchers(
-        "/main"
+        "/css/**" //css 및 기본 asset 파일은 로그인 여부와 상관없이 이 경로에 접근 허용하도록 추가한다.
+        , "/asset/**"
+        , "/"
         , "/member/join"
+        , "/product/**"
     ).permitAll();
 
     http.authorizeRequests().antMatchers("/admin/**")
