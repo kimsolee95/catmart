@@ -4,7 +4,7 @@ import com.shoptest.catmart.cart.domain.Cart;
 import com.shoptest.catmart.cart.dto.CartItemDetailDto;
 import com.shoptest.catmart.cart.repository.CartRepository;
 import com.shoptest.catmart.cart.service.CartService;
-import com.shoptest.catmart.common.exception.OrderException;
+import com.shoptest.catmart.common.exception.customexception.OrderException;
 import com.shoptest.catmart.common.exception.type.OrderErrorCode;
 import com.shoptest.catmart.member.domain.Member;
 import com.shoptest.catmart.member.repository.MemberRepository;

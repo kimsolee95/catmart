@@ -1,8 +1,6 @@
 package com.shoptest.catmart.member.service.impl;
 
-import com.shoptest.catmart.common.exception.CartException;
-import com.shoptest.catmart.common.exception.MemberException;
-import com.shoptest.catmart.common.exception.type.CartErrorCode;
+import com.shoptest.catmart.common.exception.customexception.MemberException;
 import com.shoptest.catmart.common.exception.type.MemberErrorCode;
 import com.shoptest.catmart.member.domain.Member;
 import com.shoptest.catmart.member.dto.MemberAddressDto;
@@ -32,8 +30,8 @@ public class MemberServiceImpl implements MemberService {
   @Override
   public boolean joinMember(MemberInputDto parameter) {
 
-    Optional<Member> optionalMember = memberRepository.findByEmail(parameter.getEmail());
-    if (optionalMember.isPresent()) {
+    boolean isExistsUser = memberRepository.existsByEmail(parameter.getEmail());
+    if (isExistsUser) {
       throw new MemberException(MemberErrorCode.USER_EMAIL_ALREADY_EXIST); //error message 출력 page return(바로 뷰 매칭해서 보여주는 컨트롤러에서 사용하는 서비스이기 때문에 error page 리턴)
     }
 

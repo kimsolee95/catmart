@@ -1,4 +1,4 @@
-package com.shoptest.catmart.common.exception;
+package com.shoptest.catmart.common.exception.customexception;
 
 import com.shoptest.catmart.common.exception.type.CartErrorCode;
 import lombok.AllArgsConstructor;
