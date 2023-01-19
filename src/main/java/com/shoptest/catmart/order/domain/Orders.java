@@ -1,8 +1,6 @@
 package com.shoptest.catmart.order.domain;
 
 import com.shoptest.catmart.cart.dto.CartItemDetailDto;
-import com.shoptest.catmart.common.exception.OrderException;
-import com.shoptest.catmart.common.exception.type.OrderErrorCode;
 import com.shoptest.catmart.member.domain.Member;
 import com.shoptest.catmart.order.dto.OrderItemAddInputDto;
 import com.shoptest.catmart.order.type.OrderStatus;

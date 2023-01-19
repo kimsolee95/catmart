@@ -5,6 +5,7 @@ import com.shoptest.catmart.admin.dto.CategoryDto;
 import com.shoptest.catmart.admin.dto.CategoryImgDto;
 import com.shoptest.catmart.admin.service.CategoryImgService;
 import com.shoptest.catmart.admin.service.CategoryService;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,22 +28,5 @@ public class ManagingCategoryController {
 
     return "admin/category/add";
   }
-
-  @PostMapping("/add.do")
-  public String categoryAddSubmit(CategoryDto categoryDto
-      , BindingResult bindingResult
-      , Model model
-      , @RequestParam("fileInput")
-      MultipartFile fileInput) {
-
-    if (bindingResult.hasErrors()) {
-      return "admin/category/add";
-    }
-
-    categoryService.saveCategory(categoryDto, fileInput);
-
-    return "redirect:/";
-  }
-
 
 }

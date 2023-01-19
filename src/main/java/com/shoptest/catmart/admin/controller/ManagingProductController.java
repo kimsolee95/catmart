@@ -30,23 +30,6 @@ public class ManagingProductController {
     return "admin/product/add";
   }
 
-  @PostMapping("/add.do")
-  public String productAddSubmit(ProductItemDto productItemDto
-      , BindingResult bindingResult
-      , Model model
-      , @RequestParam("fileInput")
-      MultipartFile fileInput
-  ) {
-
-    if (bindingResult.hasErrors()) {
-      return "admin/product/add";
-    }
-
-    productService.saveProduct(productItemDto, fileInput);
-
-    return "redirect:/";
-  }
-
   @GetMapping("/list.do")
   public String productList(Model model) {
 

@@ -4,11 +4,11 @@ import com.shoptest.catmart.common.model.ResponseResult;
 import com.shoptest.catmart.order.dto.OrderItemAddInputDto;
 import com.shoptest.catmart.order.service.OrderService;
 import java.security.Principal;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,7 +33,7 @@ public class ApiOrderController {
   }
 
   @PostMapping("/api/order/singleProduct")
-  public ResponseEntity<?> createOrderFromProductDetail(Model model, Principal principal, @RequestBody OrderItemAddInputDto orderItemAddInputDto) {
+  public ResponseEntity<?> createOrderFromProductDetail(Model model, Principal principal, @RequestBody @Valid OrderItemAddInputDto orderItemAddInputDto) {
 
     String email = principal.getName();
     orderService.createOrder(orderItemAddInputDto, email);

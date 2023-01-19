@@ -7,6 +7,7 @@ import com.shoptest.catmart.cart.service.CartService;
 import com.shoptest.catmart.common.model.ResponseResult;
 import io.swagger.annotations.ApiOperation;
 import java.security.Principal;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class ApiCartController {
 
   @ApiOperation(value="장바구니 - 로그인한 고객의 장바구니에 장바구니 상품을 담습니다.", notes = "장바구니 상품 data isnert or update")
   @PostMapping("/api/cart/cartItem")
-  public ResponseEntity<?> addCartItem(Model model, @RequestBody CartItemAddInputDto parameter, Principal principal) {
+  public ResponseEntity<?> addCartItem(Model model, @RequestBody @Valid CartItemAddInputDto parameter, Principal principal) {
 
     String email = principal.getName();
     Long savedCartItemId = cartService.addItemInCart(email, parameter);
@@ -38,7 +39,7 @@ public class ApiCartController {
 
   @ApiOperation(value="장바구니 - 로그인한 고객의 장바구니 내 상품 수량을 변경합니다.", notes ="장바구니 상품 수량 update")
   @PutMapping("/api/cart/cartItem")
-  public ResponseEntity<?> updateCartProductQuantity(Model model, @RequestBody CartItemUpdateInputDto parameter, Principal principal) {
+  public ResponseEntity<?> updateCartProductQuantity(Model model, @RequestBody @Valid CartItemUpdateInputDto parameter, Principal principal) {
 
     String email = principal.getName();
     Long updatedCartItemId = cartService.updateItemQuantityInCart(email, parameter);

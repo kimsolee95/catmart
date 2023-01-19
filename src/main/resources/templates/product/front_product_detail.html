@@ -95,6 +95,13 @@
           }
 
           let quantity = quantityInput.value;
+
+          //다음 api 내에서도 서버 내에서 validate 있지만 js 단에서도 유효성 추가
+          if (quantity < 1) {
+            alert('주문할 상품은 1개 이상이어야 합니다.');
+            return false;
+          }
+
           window.location.href = "/order/product?productItemId=" + productItemId + "&quantity=" + quantity; //주문하기 폼(단일 상품 주문 시의 페이지)으로 이동
 
         });

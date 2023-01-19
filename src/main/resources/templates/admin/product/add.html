@@ -12,16 +12,69 @@
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+  <!-- axios cdn -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
   <!-- 추가 script -->
   <th:block layout:fragment="script">
     <script th:inline="javascript">
 
-      $(document).ready(function() {
+      window.addEventListener('DOMContentLoaded', function(){
+
+        //상품 등록 버튼 클릭 이벤트 주입
+        document.querySelector('#btn-product-add').addEventListener('click', function() {
+
+          const frm = new FormData();
+
+          let url = '/api/admin/newProduct';
+
+          let categoryId = document.getElementById('categoryId').value;
+          let itemName = document.getElementById('itemName').value;
+          let itemSubject = document.getElementById('itemSubject').value;
+          let price = document.getElementById('price').value;
+          let stock = document.getElementById('stock').value;
+          let postYn = document.querySelector('input[name="postYn"]:checked').value;
+
+          let fileInput = document.getElementById('fileInput').files[0];
+
+          const data = {
+            "categoryId": categoryId
+            , "itemName": itemName
+            , "itemSubject": itemSubject
+            , "price": price
+            , "stock": stock
+            , "postYn": postYn
+          };
+
+          frm.append("fileInput", fileInput);
+          frm.append("data", new Blob([JSON.stringify(data)], {
+            type: "application/json"
+          })); //JSON 형식으로 만든 parameter -> JSON 문자열로 변환 -> Blob로 변환
+
+          axios.post(url, frm).then(function(response) {
+
+            response.data = response.data || {};
+            response.data.responseResultHeader = response.data.responseResultHeader || {};
+
+            //success
+            alert('상품 등록이 정상 처리되었습니다.');
+            location.href = '/main';
+
+          }).catch(function(error) {
+
+            if (error.response) {
+              //요청 후, 서버가 2xx 범위 벗어나는 상태 코드를 주었다.(validate parameter 익셉션 핸들러 코드 )
+              console.log(error.response.data);
+              alert(error.response.data.errorMessage);
+            }
+
+            console.log(error);
+          });
+
+        });
 
 
-      });
-
+      }); //window.addEventListener
 
     </script>
 
@@ -77,8 +130,6 @@
 
   <div class="content">
     <h2>상품 등록 페이지</h2>
-
-    <form class="addForm" method="post" enctype="multipart/form-data">
 
       <div class="form-group">
 
@@ -140,8 +191,7 @@
           </div>
         </div>
       </div>
-      <button type="submit" class="btn btn-light btn-lg btn-block">상품 등록하기</button>
-    </form>
+      <button type="submit" class="btn btn-light btn-lg btn-block" id="btn-product-add">상품 등록하기</button>
 
   </div>
 

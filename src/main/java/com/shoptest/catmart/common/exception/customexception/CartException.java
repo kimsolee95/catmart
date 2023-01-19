@@ -1,4 +1,4 @@
-package com.shoptest.catmart.common.exception;
+package com.shoptest.catmart.common.exception.customexception;
 
 import com.shoptest.catmart.common.exception.type.CartErrorCode;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CartException extends RuntimeException{
+public class CartException extends RuntimeException {
 
   private CartErrorCode cartErrorCode;
   private String errorMessage;
