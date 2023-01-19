@@ -16,6 +16,64 @@
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+  <!-- axios cdn -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+      window.addEventListener('DOMContentLoaded', function(){
+
+        //가입 버튼 클릭 이벤트
+        document.querySelector('#btn-member-join').addEventListener('click', function() {
+
+          let url = '/api/members';
+          let email = document.getElementById('email').value;
+          let name = document.getElementById('name').value;
+          let phoneNumber = document.getElementById('phoneNumber').value;
+          let password = document.getElementById('password').value;
+          let address = document.getElementById('address').value;
+          let zipcode = document.getElementById('zipcode').value;
+          let addressDetail = document.getElementById('addressDetail').value;
+
+          let parameter = {
+            email: email
+            , name: name
+            , phoneNumber: phoneNumber
+            , password: password
+            , address: address
+            , zipcode: zipcode
+            , addressDetail: addressDetail
+          };
+
+          axios.post(url, parameter).then(function(response) {
+
+            response.data = response.data || {};
+            response.data.responseResultHeader = response.data.responseResultHeader || {};
+
+            //success
+            alert('회원 가입을 완료했습니다. 로그인하셔서 서비스를 이용해주세요.');
+            location.href = '/member/login';
+
+          }).catch(function(error) {
+
+            if (error.response) {
+              //요청 후, 서버가 2xx 범위 벗어나는 상태 코드를 주었다.(validate parameter 익셉션 핸들러 코드 )
+              console.log(error.response.data);
+              alert(error.response.data.errorMessage);
+            }
+
+            console.log(error);
+          });
+
+        });
+
+
+      }); //window.addEventListener
+    </script>
+  </th:block>
+
+
   <!--추가 CSS -->
   <th:block layout:fragment="css">
     <style>
@@ -60,7 +118,7 @@
     <div th:replace="/fragments/header.html :: header"></div>
 
     <div class="content">
-    <form action="/member/join" method="post">
+    <div id="form-member-join">
       <div class="mb-3">
         <label for="name" class="form-label">이름</label>
         <input type="text" class="form-control" id="name" name="name" placeholder="이름">
@@ -91,11 +149,10 @@
         <label for="addressDetail" class="form-label">상세 주소</label>
         <input type="text" class="form-control" id="addressDetail" name="addressDetail" placeholder="상세 주소">
       </div>
-      <!--
-      <input type="hidden" th:name="${_crsf.parameterName}" th:value="${_crsf.token}">
-      -->
-      <button type="submit" class="btn btn-secondary btn-lg btn-block">가입하기</button>
-    </form>
+      <button type="button" class="btn btn-secondary btn-lg btn-block" id="btn-member-join">가입하기</button>
+    </div>
+<!--      <button type="submit" class="btn btn-secondary btn-lg btn-block" id="member-join">가입하기</button>-->
+
     </div>
 
     <div th:replace="/fragments/footer.html :: footer"></div>

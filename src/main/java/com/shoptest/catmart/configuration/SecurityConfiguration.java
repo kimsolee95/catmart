@@ -44,6 +44,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         , "/asset/**"
         , "/"
         , "/member/join"
+        , "/api/members"
         , "/product/**"
     ).permitAll();
 
