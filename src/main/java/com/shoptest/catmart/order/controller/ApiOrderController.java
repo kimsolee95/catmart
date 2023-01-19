@@ -4,6 +4,7 @@ import com.shoptest.catmart.common.model.ResponseResult;
 import com.shoptest.catmart.order.dto.OrderItemAddInputDto;
 import com.shoptest.catmart.order.service.OrderService;
 import java.security.Principal;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class ApiOrderController {
   }
 
   @PostMapping("/api/order/singleProduct")
-  public ResponseEntity<?> createOrderFromProductDetail(Model model, Principal principal, @RequestBody OrderItemAddInputDto orderItemAddInputDto) {
+  public ResponseEntity<?> createOrderFromProductDetail(Model model, Principal principal, @RequestBody @Valid OrderItemAddInputDto orderItemAddInputDto) {
 
     String email = principal.getName();
     orderService.createOrder(orderItemAddInputDto, email);
