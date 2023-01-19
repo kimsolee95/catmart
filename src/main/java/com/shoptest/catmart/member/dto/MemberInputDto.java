@@ -1,5 +1,6 @@
 package com.shoptest.catmart.member.dto;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Getter;
@@ -15,15 +16,15 @@ import lombok.ToString;
 public class MemberInputDto {
 
   /* 이메일 */
-  @NotNull(message = "이메일을 입력해주세요.")
+  @NotBlank(message = "이메일을 입력해주세요.")
   private String email;
 
   /* 이름 */
-  @NotNull(message = "이름을 입력해주세요.")
+  @NotBlank(message = "이름을 입력해주세요.")
   private String name;
 
   /* 핸드폰번호 */
-  @NotNull(message = "핸드폰번호를 입력해주세요.")
+  @NotBlank(message = "핸드폰번호를 입력해주세요.")
   private String phoneNumber;
 
   /* 비밀번호 */
@@ -31,15 +32,15 @@ public class MemberInputDto {
   private String password;
 
   /* 주소 */
-  @NotNull(message = "우편번호 찾기를 통해서 주소를 입력해주세요.")
+  @NotBlank(message = "우편번호 찾기를 통해서 주소를 입력해주세요.")
   private String address;
 
   /* 우편번호 */
-  @NotNull(message = "우편 번호 찾기를 통해서 우편번호를 입력해주세요.")
+  @NotBlank(message = "우편 번호 찾기를 통해서 우편번호를 입력해주세요.")
   private String zipcode;
 
   /* 상세주소 */
-  @NotNull(message = "상세주소는 꼭 입력해주세요.")
+  @NotBlank(message = "상세주소는 꼭 입력해주세요. (상품지 배송 기본주소입니다.)")
   private String addressDetail;
 
 }
