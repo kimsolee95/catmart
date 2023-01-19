@@ -26,12 +26,11 @@ public class MemberController {
   public String memberJoinSubmit(Model model, MemberInputDto parameter) {
 
     boolean result = memberService.joinMember(parameter);
-    return "index";
+    return "member/login"; //회원가입 후 로그인 페이지 리턴으로 변경
   }
 
   @GetMapping(value= "/login")
   public String memberLogin() {
-
 
     return "member/login";
   }

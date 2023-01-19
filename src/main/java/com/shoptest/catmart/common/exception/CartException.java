@@ -15,7 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CartException extends RuntimeException{
+public class CartException extends RuntimeException {
 
   private CartErrorCode cartErrorCode;
   private String errorMessage;

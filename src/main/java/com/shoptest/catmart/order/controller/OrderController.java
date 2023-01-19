@@ -4,18 +4,14 @@ import com.shoptest.catmart.cart.service.CartService;
 import com.shoptest.catmart.member.service.MemberService;
 import com.shoptest.catmart.order.dto.OrderItemAddInputDto;
 import com.shoptest.catmart.order.service.OrderService;
-import com.shoptest.catmart.product.domain.ProductItem;
 import com.shoptest.catmart.product.service.ProductService;
-import java.net.http.HttpRequest;
 import java.security.Principal;
-import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/order")
