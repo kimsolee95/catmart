@@ -12,76 +12,58 @@
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+  <!-- axios cdn -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
   <!-- 추가 script -->
   <th:block layout:fragment="script">
     <script th:inline="javascript">
+      window.addEventListener('DOMContentLoaded', function(){
 
-      $(document).ready(function() {
+        //카테고리 등록 버튼 클릭 이벤트
+        document.querySelector('#btn-category-add').addEventListener('click', function() {
 
-<!--        const regex = new RegExp("(.*?)\.(exe|sh|zip|alz|tiff)$");-->
-<!--        const maxSize = 10485760; //10MB-->
+          const frm = new FormData();
 
-<!--        //첨부 파일 유효성 검사-->
-<!--        function validateExtension(fileName, fileSize) {-->
+          let url = '/api/admin/newCategory';
+          let categoryName = document.getElementById('categoryName').value;
+          let fileInput = document.getElementById('fileInput').files[0];
 
-<!--          //파일 크기 validate-->
-<!--          if (fileSize >= maxSize) {-->
-<!--            alert("파일 사이즈를 초과하였습니다.");-->
-<!--            return false;-->
-<!--          }-->
+          const data = {
+            "categoryName": categoryName
+          };
 
-<!--          //파일 확장자 validate-->
-<!--          if (regex.test(fileName)) {-->
-<!--            alert("해당 확장자 파일은 업로드할 수 없습니다.");-->
-<!--            return false;-->
-<!--          }-->
+          frm.append("fileInput", fileInput);
+          frm.append("data", new Blob([JSON.stringify(data)], {
+            type: "application/json"
+          })); //JSON 형식으로 만든 parameter -> JSON 문자열로 변환 -> Blob로 변환
 
-<!--          return true;-->
-<!--        }-->
+          axios.post(url, frm).then(function(response) {
 
-<!--        $("#fileInput").on("change", function() {-->
+            response.data = response.data || {};
+            response.data.responseResultHeader = response.data.responseResultHeader || {};
 
-<!--          //var fileName = $(this).val().split("\\").pop();-->
+            //success
+            alert('카테고리 등록이 정상 처리되었습니다.');
+            location.href = '/main';
 
-<!--          var formData = new FormData();-->
+          }).catch(function(error) {
 
-<!--          var inputFile = $("input[type='file']");-->
+            if (error.response) {
+              //요청 후, 서버가 2xx 범위 벗어나는 상태 코드를 주었다.(validate parameter 익셉션 핸들러 코드 )
+              console.log(error.response.data);
+              alert(error.response.data.errorMessage);
+            }
 
-<!--          var files = inputFile[0].files;-->
+            console.log(error);
+          });
 
-<!--          for (var i=0; i<files.length; i++) {-->
-<!--            console.log(files[i]);-->
-<!--            formData.append("uploadFiles", files);-->
-<!--          }-->
+        });
 
-<!--          console.log('formData확인');-->
-<!--          console.log(formData);-->
 
-<!--          //upload fileInput-->
-<!--          $.ajax({-->
-<!--            url: '/uploadFileInputApi',-->
-<!--            enctype: 'multipart/form-data',-->
-<!--            processData: false,-->
-<!--            contentType: false,-->
-<!--            data: formData,-->
-<!--            type: 'POST',-->
-<!--            dataType: 'json',-->
-<!--            success: function(result) {-->
-<!--              console.log(result);-->
-<!--            },-->
-<!--            error: function(jqXHR, textStatus, errorThrown) {-->
-<!--              console.log(textStatus);-->
-<!--            }-->
-<!--          });-->
-
-<!--        });-->
-
-      });
-
+      }); //window.addEventListener
 
     </script>
-
   </th:block>
 
   <!-- 추가 CSS -->
@@ -135,7 +117,7 @@
   <div class="content">
     <h2>카테고리 등록 페이지</h2>
 
-    <form class="addForm" method="post" enctype="multipart/form-data">
+<!--    <form class="addForm" method="post" enctype="multipart/form-data">-->
 
       <div class="form-group">
         <label for="categoryName">상품 카테고리명</label>
@@ -153,9 +135,9 @@
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary">카테고리 등록</button>
+      <button type="submit" class="btn btn-primary" id="btn-category-add">카테고리 등록</button>
 
-    </form>
+<!--    </form>-->
 
   </div>
 
