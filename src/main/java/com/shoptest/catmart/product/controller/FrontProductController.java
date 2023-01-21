@@ -33,7 +33,7 @@ public class FrontProductController {
     model.addAttribute("frontProductList", productService.selectFrontProductList(parameter));
     model.addAttribute("categoryList", categoryService.categorySelectionList());
 
-    return "/product/front_product_list";
+    return "product/front_product_list";
   }
 
   @GetMapping("/detail/{productItemId}")
@@ -51,7 +51,7 @@ public class FrontProductController {
 
     model.addAttribute("detail", detail);
     model.addAttribute("email", email);
-    return "/product/front_product_detail";
+    return "product/front_product_detail";
   }
 
 

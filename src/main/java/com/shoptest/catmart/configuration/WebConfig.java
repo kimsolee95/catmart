@@ -41,18 +41,77 @@ public class WebConfig implements WebMvcConfigurer { //implements WebMvcConfigur
 
   //swagger config
   @Bean
-  public Docket api() {
+  public Docket apiCart() {
     return new Docket(DocumentationType.SWAGGER_2)
         .select()
-        .apis(RequestHandlerSelectors.basePackage("com.shoptest.catmart.cart"))
+        .apis(RequestHandlerSelectors.basePackage("com.shoptest.catmart.cart.controller.api"))
         .paths(PathSelectors.any())
-        .build().apiInfo(cartApiInfo());
+        .build()
+        .groupName("CART_API")
+        .apiInfo(cartApiInfo());
+  }
+
+  @Bean
+  public Docket apiOrder() {
+    return new Docket(DocumentationType.SWAGGER_2)
+        .select()
+        .apis(RequestHandlerSelectors.basePackage("com.shoptest.catmart.order.controller.api"))
+        .paths(PathSelectors.any())
+        .build()
+        .groupName("ORDER_API")
+        .apiInfo(orderApiInfo());
+  }
+
+  @Bean
+  public Docket apiMember() {
+    return new Docket(DocumentationType.SWAGGER_2)
+        .select()
+        .apis(RequestHandlerSelectors.basePackage("com.shoptest.catmart.member.controller.api"))
+        .paths(PathSelectors.any())
+        .build()
+        .groupName("MEMBER_API")
+        .apiInfo(memberApiInfo());
+  }
+
+  @Bean
+  public Docket apiAdmin() {
+    return new Docket(DocumentationType.SWAGGER_2)
+        .select()
+        .apis(RequestHandlerSelectors.basePackage("com.shoptest.catmart.admin.controller.api"))
+        .paths(PathSelectors.any())
+        .build()
+        .groupName("ADMIN_API")
+        .apiInfo(memberApiInfo());
   }
 
   private ApiInfo cartApiInfo() {
     return new ApiInfoBuilder()
         .title("CAT_MART 장바구니 API")
-        .description("CAT_MART의 장바구니 상품을 CRUD하는 API입니다.")
+        .description("CAT_MART의 장바구니 상품 업무 API입니다.")
+        .version("1.0")
+        .build();
+  }
+
+  private ApiInfo orderApiInfo() {
+    return new ApiInfoBuilder()
+        .title("CAT_MART 주문 API")
+        .description("CAT_MART의 주문 업무 API입니다.")
+        .version("1.0")
+        .build();
+  }
+
+  private ApiInfo memberApiInfo() {
+    return new ApiInfoBuilder()
+        .title("CAT_MART 회원 API")
+        .description("CAT_MART의 회원 업무 API입니다.")
+        .version("1.0")
+        .build();
+  }
+
+  private ApiInfo adminApiInfo() {
+    return new ApiInfoBuilder()
+        .title("CAT_MART 관리자 API")
+        .description("CAT_MART의 관리자 BO 업무 API입니다.")
         .version("1.0")
         .build();
   }

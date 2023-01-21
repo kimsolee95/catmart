@@ -22,7 +22,7 @@ public class CartController {
 
     model.addAttribute("cartItemList", cartService.selectCartItemDetailList(email));
 
-    return "/cart/cart_item_list";
+    return "cart/cart_item_list";
   }
 
 }

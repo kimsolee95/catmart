@@ -1,4 +1,4 @@
-package com.shoptest.catmart.member.controller;
+package com.shoptest.catmart.member.controller.api;
 
 import com.shoptest.catmart.common.model.ResponseResult;
 import com.shoptest.catmart.member.dto.MemberInputDto;

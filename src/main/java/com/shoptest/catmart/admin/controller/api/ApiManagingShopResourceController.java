@@ -1,4 +1,4 @@
-package com.shoptest.catmart.admin.controller;
+package com.shoptest.catmart.admin.controller.api;
 
 
 import com.shoptest.catmart.admin.dto.CategoryDto;

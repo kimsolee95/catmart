@@ -31,7 +31,7 @@ public class OrderController {
     model.addAttribute("shippingAddress", memberService.selectMemberAddress(email)); //배송지 (원래는 배송 관련 내용만 따로 담은 table 필요..)
     model.addAttribute("cartItemList", cartService.selectCartItemDetailList(email)); //장바구니에 담은 상품 목록
 
-    return "/order/order_from_cart";
+    return "order/order_from_cart";
   }
 
   @GetMapping("/product")
@@ -47,7 +47,7 @@ public class OrderController {
     model.addAttribute("shippingAddress", memberService.selectMemberAddress(email)); //배송지 (원래는 배송 관련 내용만 따로 담은 table 필요..)
     model.addAttribute("toBeOrderItem", productService.selectOrderItemDetailByProduct(orderItemAddInputDto));
 
-    return "/order/order_from_product";
+    return "order/order_from_product";
   }
 
   @GetMapping("/history")
@@ -56,7 +56,7 @@ public class OrderController {
     String email = principal.getName();
     model.addAttribute("ordersHistoryList", orderService.selectOrdersHistoryList(email));
 
-    return "/order/order_history_list";
+    return "order/order_history_list";
   }
 
   @GetMapping("/history/detail/{ordersId}")
@@ -66,7 +66,7 @@ public class OrderController {
     model.addAttribute("shippingAddress", memberService.selectMemberAddress(email)); //배송지 (원래는 배송 관련 내용만 따로 담은 table 필요..)
     model.addAttribute("ordersHistoryDetailList", orderService.selectOrdersHistoryDetailList(email, ordersId)); //주문 내 상세 주문정보 list
 
-    return "/order/order_history_detail";
+    return "order/order_history_detail";
   }
 
 }

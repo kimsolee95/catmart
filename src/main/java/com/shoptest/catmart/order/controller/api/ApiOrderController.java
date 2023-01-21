@@ -1,4 +1,4 @@
-package com.shoptest.catmart.order.controller;
+package com.shoptest.catmart.order.controller.api;
 
 import com.shoptest.catmart.common.model.ResponseResult;
 import com.shoptest.catmart.order.dto.OrderItemAddInputDto;

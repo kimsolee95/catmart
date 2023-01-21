@@ -1,4 +1,4 @@
-package com.shoptest.catmart.cart.controller;
+package com.shoptest.catmart.cart.controller.api;
 
 import com.shoptest.catmart.cart.dto.CartItemAddInputDto;
 import com.shoptest.catmart.cart.dto.CartItemDeleteInputDto;
