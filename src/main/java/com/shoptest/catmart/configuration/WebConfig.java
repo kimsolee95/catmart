@@ -81,7 +81,7 @@ public class WebConfig implements WebMvcConfigurer { //implements WebMvcConfigur
         .paths(PathSelectors.any())
         .build()
         .groupName("ADMIN_API")
-        .apiInfo(memberApiInfo());
+        .apiInfo(adminApiInfo());
   }
 
   private ApiInfo cartApiInfo() {

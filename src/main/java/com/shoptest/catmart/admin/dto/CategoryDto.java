@@ -1,5 +1,8 @@
 package com.shoptest.catmart.admin.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,9 +20,11 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@ApiModel(value="CategoryDto", description = "카테고리명 input DTO")
 public class CategoryDto {
 
   /* 카테고리명 */
+  @ApiModelProperty(value="카테고리명")
   @NotBlank(message = "카테고리명을 입력해주세요.")
   private String categoryName;
 
