@@ -87,7 +87,7 @@
       <div th:each="product, i : ${frontProductList}">
 
         <div class="card rounded" style="width: 300px;">
-          <img th:src="${product.urlImgPath}" class="card-img-top" alt="...">
+          <img th:src="${product.urlImgPath}" class="card-img-top" alt="..." style="max-height: 275px;">
           <div class="card-body">
             <h5 class="card-title">
               <a th:href="'detail/' + ${product.productItemId}"
