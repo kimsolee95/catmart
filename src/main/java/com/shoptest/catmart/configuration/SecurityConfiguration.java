@@ -43,6 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         "/css/**" //css 및 기본 asset 파일은 로그인 여부와 상관없이 이 경로에 접근 허용하도록 추가한다.
         , "/asset/**"
         , "/"
+        , "/error"
         , "/member/join"
         , "/api/members" //회원가입 API
         , "/images/**" //웹출력용 이미지 경로
