@@ -49,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
     // (1) 해당 이용자 장바구니_상품 및 해당 상품 정보 select -> (2) 현재 상품 재고 및 상태 체크 -> (3) 주문_상품으로 변환하기 4) 주문에 주문 상품 set
     //2-1. 현재 이용자의 장바구니 상품 및 해당 상품 정보 모두 가져오기(myBatis 쿼리 직접 실행)
     List<CartItemDetailDto> cartItemDetailList = cartService.selectCartItemDetailList(email);
-    if (cartItemDetailList.isEmpty() || cartItemDetailList.size() == 0) {
+    if (cartItemDetailList.isEmpty()) {
       throw new OrderException(OrderErrorCode.NOT_EXIST_CART_ITEM);
     }
 
